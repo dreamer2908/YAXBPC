@@ -1007,12 +1007,12 @@ namespace YAXBPC
 
         private void btnSetxdeltaHighCompression_Click(object sender, EventArgs e)
         {
-            txtCustomXdeltaParams.Text = "-e -f -7 -B536870912 -S djw -s %source% %patched% %vcdiff%";
+            txtCustomXdeltaParams.Text = "-e -f -7 -B1073741824 -S djw -s %source% %patched% %vcdiff%";
         }
 
         private void btnSetxdeltaHighMem_Click(object sender, EventArgs e)
         {
-            txtCustomXdeltaParams.Text = "-e -f -B536870912 -s %source% %patched% %vcdiff%";
+            txtCustomXdeltaParams.Text = "-e -f -B1073741824 -s %source% %patched% %vcdiff%";
         }
 
         private void btnSetxdeltaDefault_Click(object sender, EventArgs e)
