@@ -1,0 +1,22 @@
+Hi there! Yes, you!
+
+In short:
+- Move your original file (&sourcefile&) into this folder, or this folder's parent folder. For example: all these patches, scripts, xdelta3 binaries, how_to_appply_this_patch.txt are in folder Entertain/Animu/Nourin/patch_ep_01_v2. You should put it in either patch_ep_01_v2, Nourin, Animu, or Entertain. These scripts will first look for it in patch_ep_01_v2; if it can't find it there, it will look in Nourin, and then Animu, and finally Entertain. If the file can't be found in these four location, the scripts will give up. Please don't troll these poor scripts. Thanks.
+- Run the applying script written for your operating system: for Windows, apply_patch_windows.bat; for Linux/Unix, apply_patch_linux.sh; for Mac OSX, apply_patch_mac.command.
+- Check if a new file was created (&targetfile&). If true, you're successful, so stop here.
+- If not, try the alternative script and check the output again. Comment: if used correctly, only windows scripts in legacy versions of windows have some real chance of failure. Otherwise, it shouldn't fail at all.
+- If the alternative script fails, redo carefully from the first step.
+- If nothing worked, you can resort to manual patching. Feel free to use any xdelta3 GUI if you don't like the following steps.
+    + Move your original file (&sourcefile&) into this folder (the one where all these patches, scripts, xdelta3 binaries, how_to_appply_this_patch.txt are).
+    + Open Command Prompt (Windows) or Terminal (Linux, Unix, Mac OSX). Change working directory to this folder. On Windows Explorer, you might want to right click in a blank area while pressing Shift to quickly do this step.
+    + Copy and paste this line there, then press Enter: xdelta3 -d -f -s "&sourcefile&" "changes.vcdiff" "&targetfile&"
+    + Done. Hint to users who think they know how to use xdelta3 and insist to run "xdelta3 -d changes.vcdiff": filenames stored in changes.vcdiff are not guaranteed to be correct, as the patch might have been created in a different type of system (Win32 vs. Linux, Win32 vs. Mac OSX) so xdelta3 might be unable to decode these filenames, or it might have been created "funnily" where filenames are replaced with garbage.
+
+You might want to check for some system requirements:
+- A *working* computer.
+- A *working* and *modern* PC operating system (Windows, Linux, Unix, Mac OSX).
+- These common OSes are officially supported and fully tested: Windows 7, Windows 10, Linux Mint 17.3, and whatever Mac OSX in 2014. WinXP and earlier is officially unsupported. The rest are unknown, and I have no way nor intention to test them.
+- For Mac OSX: A guy has provided me with a Mac binary, but seriously, you should install xdelta3 package.
+- For Linux/Unix: Either xdelta3 package installed, WinE package installed, or included Linux binaries' permission set to executable. Your shell should be Bash or dash; sh still works as long as you don't "source" the script.
+- For Windows: Nothing prevents the script from executing the binary file xdelta3.exe (stupid antivirus for example).
+- Make sure that no program is accessing the original file (&sourcefile&) and any files in this patch. This is not a strict requirement, but patching might fail otherwise.

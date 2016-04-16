@@ -1,0 +1,828 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Experimental.IO</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Experimental.IO.LongPathFile">
+            <summary>
+                Provides static methods for creating, copying, deleting, moving, and opening of files
+                with long paths, that is, paths that exceed 259 characters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathFile.Exists(System.String)">
+            <summary>
+                Returns a value indicating whether the specified path refers to an existing file.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path to check.
+            </param>
+            <returns>
+                <see langword="true"/> if <paramref name="path"/> refers to an existing file; 
+                otherwise, <see langword="false"/>.
+            </returns>
+            <remarks>
+                Note that this method will return false if any error occurs while trying to determine 
+                if the specified file exists. This includes situations that would normally result in 
+                thrown exceptions including (but not limited to); passing in a file name with invalid 
+                or too many characters, an I/O error such as a failing or missing disk, or if the caller
+                does not have Windows or Code Access Security (CAS) permissions to to read the file.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathFile.Delete(System.String)">
+            <summary>
+                Deletes the specified file.
+            </summary>
+            <param name="path">
+                 A <see cref="T:System.String"/> containing the path of the file to delete.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.FileNotFoundException">
+                <paramref name="path"/> could not be found.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                One or more directories in <paramref name="path"/> could not be found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> refers to a file that is read-only.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> is a directory.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> refers to a file that is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathFile.Move(System.String,System.String)">
+            <summary>
+                Moves the specified file to a new location.
+            </summary>
+            <param name="sourcePath">
+                A <see cref="T:System.String"/> containing the path of the file to move.
+            </param>
+            <param name="destinationPath">
+                A <see cref="T:System.String"/> containing the new path of the file.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> is 
+                <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> is 
+                an empty string (""), contains only white space, or contains one or more 
+                invalid characters as defined in <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> 
+                contains one or more components that exceed the drive-defined maximum length. 
+                For example, on Windows-based platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> 
+                exceeds the system-defined maximum length. For example, on Windows-based platforms, 
+                paths must not exceed 32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.FileNotFoundException">
+                <paramref name="sourcePath"/> could not be found.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                One or more directories in <paramref name="sourcePath"/> and/or 
+                <paramref name="destinationPath"/> could not be found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="destinationPath"/> refers to a file that already exists.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> is a 
+                directory.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> refers to a file that is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> specifies 
+                a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathFile.Copy(System.String,System.String,System.Boolean)">
+            <summary>
+                Copies the specified file to a specified new file, indicating whether to overwrite an existing file.
+            </summary>
+            <param name="sourcePath">
+                A <see cref="T:System.String"/> containing the path of the file to copy.
+            </param>
+            <param name="destinationPath">
+                A <see cref="T:System.String"/> containing the new path of the file.
+            </param>
+            <param name="overwrite">
+                <see langword="true"/> if <paramref name="destinationPath"/> should be overwritten 
+                if it refers to an existing file, otherwise, <see langword="false"/>.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> is 
+                <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> is 
+                an empty string (""), contains only white space, or contains one or more 
+                invalid characters as defined in <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> 
+                contains one or more components that exceed the drive-defined maximum length. 
+                For example, on Windows-based platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> 
+                exceeds the system-defined maximum length. For example, on Windows-based platforms, 
+                paths must not exceed 32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.FileNotFoundException">
+                <paramref name="sourcePath"/> could not be found.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                One or more directories in <paramref name="sourcePath"/> and/or 
+                <paramref name="destinationPath"/> could not be found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+                <para>
+                    -or-
+                </para>
+                <paramref name="overwrite"/> is true and <paramref name="destinationPath"/> refers to a 
+                file that is read-only.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="overwrite"/> is false and <paramref name="destinationPath"/> refers to 
+                a file that already exists.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> is a 
+                directory.
+                <para>
+                    -or-
+                </para>
+                <paramref name="overwrite"/> is true and <paramref name="destinationPath"/> refers to 
+                a file that already exists and is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> refers to a file that is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="sourcePath"/> and/or <paramref name="destinationPath"/> specifies 
+                a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathFile.Open(System.String,System.IO.FileMode,System.IO.FileAccess)">
+            <summary>
+                Opens the specified file.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the file to open.
+            </param>
+            <param name="access">
+                One of the <see cref="T:System.IO.FileAccess"/> value that specifies the operations that can be 
+                performed on the file. 
+            </param>
+            <param name="mode">
+                One of the <see cref="T:System.IO.FileMode"/> values that specifies whether a file is created
+                if one does not exist, and determines whether the contents of existing files are 
+                retained or overwritten.
+            </param>
+            <returns>
+                A <see cref="T:System.IO.FileStream"/> that provides access to the file specified in 
+                <paramref name="path"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                One or more directories in <paramref name="path"/> could not be found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> refers to a file that is read-only and <paramref name="access"/>
+                is not <see cref="F:System.IO.FileAccess.Read"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> is a directory.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> refers to a file that is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathFile.Open(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)">
+            <summary>
+                Opens the specified file.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the file to open.
+            </param>
+            <param name="access">
+                One of the <see cref="T:System.IO.FileAccess"/> value that specifies the operations that can be 
+                performed on the file. 
+            </param>
+            <param name="mode">
+                One of the <see cref="T:System.IO.FileMode"/> values that specifies whether a file is created
+                if one does not exist, and determines whether the contents of existing files are 
+                retained or overwritten.
+            </param>
+            <param name="share">
+                One of the <see cref="T:System.IO.FileShare"/> values specifying the type of access other threads 
+                have to the file. 
+            </param>
+            <returns>
+                A <see cref="T:System.IO.FileStream"/> that provides access to the file specified in 
+                <paramref name="path"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                One or more directories in <paramref name="path"/> could not be found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> refers to a file that is read-only and <paramref name="access"/>
+                is not <see cref="F:System.IO.FileAccess.Read"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> is a directory.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> refers to a file that is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathFile.Open(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,System.Int32,System.IO.FileOptions)">
+            <summary>
+                Opens the specified file.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the file to open.
+            </param>
+            <param name="access">
+                One of the <see cref="T:System.IO.FileAccess"/> value that specifies the operations that can be 
+                performed on the file. 
+            </param>
+            <param name="mode">
+                One of the <see cref="T:System.IO.FileMode"/> values that specifies whether a file is created
+                if one does not exist, and determines whether the contents of existing files are 
+                retained or overwritten.
+            </param>
+            <param name="share">
+                One of the <see cref="T:System.IO.FileShare"/> values specifying the type of access other threads 
+                have to the file. 
+            </param>
+            <param name="bufferSize">
+                An <see cref="T:System.Int32"/> containing the number of bytes to buffer for reads and writes
+                to the file, or 0 to specified the default buffer size, 1024.
+            </param>
+            <param name="options">
+                One or more of the <see cref="T:System.IO.FileOptions"/> values that describes how to create or 
+                overwrite the file.
+            </param>
+            <returns>
+                A <see cref="T:System.IO.FileStream"/> that provides access to the file specified in 
+                <paramref name="path"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                <paramref name="bufferSize"/> is less than 0.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                One or more directories in <paramref name="path"/> could not be found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> refers to a file that is read-only and <paramref name="access"/>
+                is not <see cref="F:System.IO.FileAccess.Read"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> is a directory.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> refers to a file that is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="T:Microsoft.Experimental.IO.LongPathDirectory">
+            <summary>
+                Provides methods for creating, deleting, moving and enumerating directories and 
+                subdirectories with long paths, that is, paths that exceed 259 characters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.Create(System.String)">
+            <summary>
+                Creates the specified directory.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the directory to create.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> contains one or more directories that could not be
+                found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+            <remarks>
+                Note: Unlike <see cref="M:System.IO.Directory.CreateDirectory(System.String)"/>, this method only creates 
+                the last directory in <paramref name="path"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.Delete(System.String)">
+            <summary>
+                Deletes the specified empty directory.
+            </summary>
+            <param name="path">
+                 A <see cref="T:System.String"/> containing the path of the directory to delete.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> could not be found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> refers to a directory that is read-only.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> refers to a directory that is not empty.
+                <para>
+                    -or-    
+                </para>
+                <paramref name="path"/> refers to a directory that is in use.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.Exists(System.String)">
+            <summary>
+                Returns a value indicating whether the specified path refers to an existing directory.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path to check.
+            </param>
+            <returns>
+                <see langword="true"/> if <paramref name="path"/> refers to an existing directory; 
+                otherwise, <see langword="false"/>.
+            </returns>
+            <remarks>
+                Note that this method will return false if any error occurs while trying to determine 
+                if the specified directory exists. This includes situations that would normally result in 
+                thrown exceptions including (but not limited to); passing in a directory name with invalid 
+                or too many characters, an I/O error such as a failing or missing disk, or if the caller
+                does not have Windows or Code Access Security (CAS) permissions to to read the directory.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.EnumerateDirectories(System.String)">
+            <summary>
+                Returns a enumerable containing the directory names of the specified directory.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the directory to search.
+            </param>
+            <returns>
+                A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the directory names within <paramref name="path"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> contains one or more directories that could not be
+                found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.EnumerateDirectories(System.String,System.String)">
+            <summary>
+                Returns a enumerable containing the directory names of the specified directory that 
+                match the specified search pattern.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the directory to search.
+            </param>
+            <param name="searchPattern">
+                A <see cref="T:System.String"/> containing search pattern to match against the names of the 
+                directories in <paramref name="path"/>, otherwise, <see langword="null"/> or an empty 
+                string ("") to use the default search pattern, "*".
+            </param>
+            <returns>
+                A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the directory names within <paramref name="path"/>
+                that match <paramref name="searchPattern"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> contains one or more directories that could not be
+                found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.EnumerateFiles(System.String)">
+            <summary>
+                Returns a enumerable containing the file names of the specified directory.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the directory to search.
+            </param>
+            <returns>
+                A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the file names within <paramref name="path"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> contains one or more directories that could not be
+                found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.EnumerateFiles(System.String,System.String)">
+            <summary>
+                Returns a enumerable containing the file names of the specified directory that 
+                match the specified search pattern.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the directory to search.
+            </param>
+            <param name="searchPattern">
+                A <see cref="T:System.String"/> containing search pattern to match against the names of the 
+                files in <paramref name="path"/>, otherwise, <see langword="null"/> or an empty 
+                string ("") to use the default search pattern, "*".
+            </param>
+            <returns>
+                A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the file names within <paramref name="path"/>
+                that match <paramref name="searchPattern"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> contains one or more directories that could not be
+                found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.EnumerateFileSystemEntries(System.String)">
+            <summary>
+                Returns a enumerable containing the file and directory names of the specified directory.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the directory to search.
+            </param>
+            <returns>
+                A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the file and directory names within 
+                <paramref name="path"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> contains one or more directories that could not be
+                found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Experimental.IO.LongPathDirectory.EnumerateFileSystemEntries(System.String,System.String)">
+            <summary>
+                Returns a enumerable containing the file and directory names of the specified directory 
+                that match the specified search pattern.
+            </summary>
+            <param name="path">
+                A <see cref="T:System.String"/> containing the path of the directory to search.
+            </param>
+            <param name="searchPattern">
+                A <see cref="T:System.String"/> containing search pattern to match against the names of the 
+                files and directories in <paramref name="path"/>, otherwise, <see langword="null"/> 
+                or an empty string ("") to use the default search pattern, "*".
+            </param>
+            <returns>
+                A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the file and directory names within 
+                <paramref name="path"/>that match <paramref name="searchPattern"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="path"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="path"/> is an empty string (""), contains only white 
+                space, or contains one or more invalid characters as defined in 
+                <see cref="M:System.IO.Path.GetInvalidPathChars"/>.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> contains one or more components that exceed
+                the drive-defined maximum length. For example, on Windows-based 
+                platforms, components must not exceed 255 characters.
+            </exception>
+            <exception cref="T:System.IO.PathTooLongException">
+                <paramref name="path"/> exceeds the system-defined maximum length. 
+                For example, on Windows-based platforms, paths must not exceed 
+                32,000 characters.
+            </exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">
+                <paramref name="path"/> contains one or more directories that could not be
+                found.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                The caller does not have the required access permissions.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                <paramref name="path"/> is a file.
+                <para>
+                    -or-
+                </para>
+                <paramref name="path"/> specifies a device that is not ready.
+            </exception>
+        </member>
+    </members>
+</doc>
