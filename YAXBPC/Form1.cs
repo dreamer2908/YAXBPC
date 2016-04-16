@@ -16,24 +16,20 @@
 
 /*
 TODO:
- * Improve getDirectoryName. See comment there
  * Make killAOption less dirty
  * Work on chbNewAutoName
  * Do something with btnBatchLoadDirs
- * Take care of addNewPatchToApplyAllScripts part in createApplyingScripts. It might not work with long paths
  * */
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
-using Microsoft.Experimental.IO;
 
 namespace YAXBPC
 {
@@ -44,15 +40,14 @@ namespace YAXBPC
             InitializeComponent();
 
             // Check OS
-            useLongPath = needLongPathSupport();
-            runningInWindows = isThisWindows();
+            runningInWindows = isMSWindowsEnv();
 
             // Load settings
             programPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            settingsFile = System.IO.Path.ChangeExtension(programPath, "ini");
-            programDir = getDirectoryName(programPath);
+            settingsFile = Path.ChangeExtension(programPath, "ini");
+            programDir = Path.GetDirectoryName(programPath);
             settings = new Database(settingsFile);
-            if (settings.Load() == null) loadSettings();
+            if (settings.Load() == "OK") loadSettings();
 
             run64bitxdelta = chbRun64bitxdelta3.Checked;
             dist64bitxdelta = chbDist64bitxdelta3.Checked;
@@ -61,20 +56,6 @@ namespace YAXBPC
             // debug mode
             debugMode = false;
             forceUnicodeMode = false;
-            forceLongPath = false;
-
-            // test getDirectoryName()
-            if (false)
-            {
-                string result = "getDirectoryName() tests: \n\n";
-                string[] test = new string[] { @"C:\Users\Yumi\Desktop\404.htm", @"C:\", @"C:\a.txt", @"C:", @"C:\bla", @"C:\bla\", @"/var/www", @"/var/www/", @"/var", @"/", "" };
-                foreach (string tmp in test)
-                {
-                    result += "\"" + tmp + "\" => \"" + getDirectoryName(tmp) + "\"\n";
-                }
-                MessageBox.Show(result);
-                MessageBox.Show("\"" + programDir + "\" vs. \"" + Path.GetDirectoryName(programPath) + "\"\n" + programDir.Equals(Path.GetDirectoryName(programPath)).ToString()); 
-            }
         }
 
         #region Global variables & type defs
@@ -82,12 +63,10 @@ namespace YAXBPC
         // runtime environment & debug mode
         Boolean debugMode = false;
         Boolean forceUnicodeMode = false;
-        Boolean forceLongPath = false;
         String settingsFile = "";
         String programPath = "";
         String programDir = "";
         Boolean runningInWindows = false;
-        Boolean useLongPath;
 
         Database settings;
         String quote = '"'.ToString();
@@ -225,41 +204,7 @@ namespace YAXBPC
 
         #region Core methods
 
-        // Checks if the string contains non-ASCII characters. 
-        // Simply strip non-ASCII characters from the string using Regex or Encoding.ASCII.GetString.
-        // Or, convert the input string into ASCII; non-ASCII chars will become "?". 
-        // EncoderReplacementFallback is marked as TODO in Mono, so just use regex for now.
-        private Boolean containNonASCIIChar(string inputString)
-        {
-            if (forceUnicodeMode) return true;
-            string asAscii = "";
-
-            // Strip non-ASCII characters from the string using Regex
-            asAscii = Regex.Replace(inputString, @"[^\u0000-\u007F]", string.Empty);
-
-            /* // Alternative solutions
-            // use Encoding.ASCII.GetString to change non-ASCII chars into ??
-            asAscii = System.Text.Encoding.ASCII.GetString(System.Text.Encoding.ASCII.GetBytes(inputString)); 
-            
-            // Strip non-ASCII characters from the string using a pure .NET solution
-            asAscii = Encoding.ASCII.GetString(
-             Encoding.Convert(
-                 Encoding.UTF8,
-                 Encoding.GetEncoding(
-                     Encoding.ASCII.EncodingName,
-                     new EncoderReplacementFallback(string.Empty),
-                     new DecoderExceptionFallback()
-                     ),
-                 Encoding.UTF8.GetBytes(inputString)
-             )); 
-            */
-
-            //MessageBox.Show("\"" + inputString + "\" => \"" + asAscii + "\"");
-            if (inputString != asAscii) return true;
-            else return false;
-        }
-
-        private Boolean isThisWindows()
+        private Boolean isMSWindowsEnv()
         {
             System.OperatingSystem osInfo = System.Environment.OSVersion;
             switch (osInfo.Platform)
@@ -278,108 +223,16 @@ namespace YAXBPC
             }
         }
 
-        /// <summary>
-        /// Checks if we need the experimental long settingsFilePath support. Only Windows versions ealier than 6.2 need it.
-        /// </summary>
-        private Boolean needLongPathSupport()
+        private Boolean stringContainsNonASCIIChar(string inputString)
         {
-            // Only Windows versions ealier than 6.2 (Windows 8) need it.
-            System.OperatingSystem osInfo = System.Environment.OSVersion;
-            switch (osInfo.Platform)
-            {
-                case System.PlatformID.Win32Windows:
-                    {
-                        // Windows 95, Windows 98, Windows 98 Second Edition, or Windows Me.
-                        return true;
-                    }
-                case System.PlatformID.Win32NT:
-                    {
-                        // Windows NT 3.51, Windows NT 4.0, Windows 2000, Windows XP, Windows Vista, Windows 7, or Windows 8
-                        // Windows 8 (NT version 6.2) or later supports long settingsFilePath
-                        if (osInfo.Version.Major >= 7 || (osInfo.Version.Major == 6 && osInfo.Version.Minor >= 2)) return false;
-                        else return true;
-                    }
-                default: return false;
-            }
-        }
-
-        /// <summary>
-        /// Checks if the settingsFilePath specified in fullPath is long (more than 255 chars for file, or 247 for directory) 
-        /// and/or needs special treatment (if any parent directory's name is longer than 247 chars - specified in those methods for long paths).
-        ///  Positive results are valid for Windows earlier than 6.2 only while negative results are always valid, or at least I think so.
-        /// </summary>
-        private Boolean isLongPath(string fullPath, Boolean isDir)
-        {
-            if (forceLongPath) return true;
-            Boolean pathIsLong = false;
-            if ((fullPath.Length > 255) || getDirectoryName(fullPath).Length > 247 || (fullPath.Length > 247 && isDir)) pathIsLong = true;
-            else
-            {
-                string[] path = fullPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
-                foreach (string tmp in path) if (tmp.Length > 247) pathIsLong = true;
-                for (int i = 0; i < path.Length; i++)
-                {
-                    if ((path[i].Length > 247) && ((i == path.Length - 1) || isDir || path[i].Length > 255)) pathIsLong = true;
-                }
-            }
-            return pathIsLong;
-        }
-
-        /// <summary>
-        /// Trims the names of each folder in fullPath to meet Windows' limit. This method is currently NOT in use.
-        /// See https://en.wikipedia.org/wiki/Filename 
-        /// http://stackoverflow.com/questions/265769/maximum-filename-length-in-ntfs-windows-xp-and-windows-vista 
-        /// or http://msdn.microsoft.com/en-us/library/aa365247.aspx
-        /// </summary>
-        private string trimPath(string fullPath)
-        {
-            string[] path = fullPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
-            string currentPath = "";
-            for (int i = 0; i < path.Length; i++)
-            {
-                string currentName = path[i];
-                if (currentName.Length > 247) currentName = currentName.Substring(0, 247);
-                currentPath = Path.Combine(currentPath, currentName);
-            }
-            return currentPath;
-        }
-
-        // A simple alternative to System.IO.Path.GetDirectoryName with slightly different behaviour. 
-        // This won't throw any exception, including PathTooLongException, 
-        // which System.IO.Path.GetDirectoryName throws (I do deal with long path so it's not acceptable). 
-        // Just remove the last name in the path and it's good to go, right? 
-        // It doesn't support Linux path when running on Windows: getDirectoryName(@"/root/a/b") returns "/root\a". 
-        // It also doesn't support Windows path when running on Linux lol. 
-        // TL;DR: cross checking not supported. 
-        // Expected behaviour: 
-        // getDirectoryName("C:\mydir\myfile.ext") returns "C:\mydir"
-        // getDirectoryName("C:\mydir\") returns "C:\mydir"
-        // getDirectoryName("C:\") returns "C:" while System.IO.Path.GetDirectoryName("C:\") returns ""
-        private string getDirectoryName(string fullFilename)
-        {
-            string[] path = fullFilename.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },  StringSplitOptions.None);
-            string currentPath = "";
-            if (path.Length > 0)
-            {
-                if (runningInWindows && path[0].EndsWith(":") && path.Length > 2) currentPath = path[0] + "\\";
-                else currentPath = path[0];
-                for (int i = 1; i < path.Length - 1; i++)
-                {
-                    currentPath = Path.Combine(currentPath, path[i]);
-                    //MessageBox.Show(currentPath);
-                }
-            }
-            if (fullFilename.StartsWith("/") && !currentPath.StartsWith("/")) currentPath = "/" + currentPath; // use this dirty hack until a proper solution is make, that is, soon™
-            return currentPath;
+            if (forceUnicodeMode) return true;
+            // Strip non-ASCII characters from the string using Regex
+            string onlyAscii = Regex.Replace(inputString, @"[^\u0000-\u007F]", string.Empty);
+            // If inputString is different from onlyAscii then it contains non-ascii char
+            return (inputString != onlyAscii);
         }
 
         private void generateOutputDirName(string sourceFile, string targetFile, int outputPlace, string customOutputDir)
-        {
-            string outputDir = generateOutputDirNameSub(sourceFile, targetFile, outputPlace, customOutputDir);
-            txtOutputDir.Text = outputDir;
-        }
-
-        private string generateOutputDirNameSub(string sourceFile, string targetFile, int outputPlace, string customOutputDir)
         {
             string episodeNumber = "";
             string outputDir = "";
@@ -415,27 +268,28 @@ namespace YAXBPC
                 if (chbDetEpNum.Checked)
                 {
                     episodeNumber = getEpisodeNumber(name2Detect);
-                    outputDir = System.IO.Path.Combine(baseOutputDir, ((episodeNumber.Length > 0) ? episodeNumber : "patch"));
+                    outputDir = Path.Combine(baseOutputDir, ((episodeNumber.Length > 0) ? episodeNumber : "patch"));
                 }
                 else
                 {
-                    outputDir = System.IO.Path.Combine(baseOutputDir, "patch");
+                    outputDir = Path.Combine(baseOutputDir, "patch");
                 }
             }
             else if (sourceFile.Length > 0 && targetFile.Length > 0)
             {
-                // Already disabled, but just for safe
+                // Already disabled, but just for sure
                 if (chbDetEpNum.Checked)
                 {
                     episodeNumber = getEpisodeNumber(name2Detect);
-                    outputDir = System.IO.Path.Combine(baseOutputDir, ((episodeNumber.Length > 0) ? episodeNumber : "patch"));
+                    outputDir = Path.Combine(baseOutputDir, ((episodeNumber.Length > 0) ? episodeNumber : "patch"));
                 }
                 else
                 {
-                    outputDir = System.IO.Path.Combine(baseOutputDir, "patch");
+                    outputDir = Path.Combine(baseOutputDir, "patch");
                 }
             }
-            return outputDir;
+
+            txtOutputDir.Text = outputDir;
         }
 
         // I don't remember how I did this, but apparently it works well enough
@@ -550,172 +404,76 @@ namespace YAXBPC
             return result;
         }
 
-        /// <summary>
-        /// Creates dir with long settingsFilePath. It's expected to run this on Windows without long settingsFilePath support. 
-        /// </summary>
-        private string createDirLong(string dir)
-        {
-            string[] path = dir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
-            string currentPath = "";
-            for (int i = 0; i < path.Length; i++)
-            {
-                string currentName = path[i];
-                if (currentName.Length > 247)
-                {
-                    Exception e = new Exception("The directory name must be less than 248 characters.");
-                    throw e;
-                }
-                currentPath = Path.Combine(currentPath, currentName);
-                if (!LongPathDirectory.Exists(currentPath)) LongPathDirectory.Create(currentPath);
-            }
-            return currentPath; // Return created directory. For future usage
-        }
-
-        private void createOutputDir(string dir)
-        {
-            Boolean pathIsLong = isLongPath(dir, true);
-
-            if (useLongPath && pathIsLong)
-            {
-                if (!LongPathDirectory.Exists(dir)) createDirLong(dir);
-            }
-            else
-            {
-                if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
-            }
-        }
-
         private void createPatch(string _sourceFile, string _targetFile, string _outDir)
         {
-            Boolean useRelativePath = false;
-            useRelativePath = chbOnlyStoreFileNameInVCDIFF.Checked || containNonASCIIChar(Path.GetFileName(_sourceFile)) || containNonASCIIChar(Path.GetFileName(_targetFile));
+            Boolean useRelativePath = chbOnlyStoreFileNameInVCDIFF.Checked || stringContainsNonASCIIChar(Path.GetFileName(_sourceFile)) || stringContainsNonASCIIChar(Path.GetFileName(_targetFile));
             string sourceFile = _sourceFile;
             string targetFile = _targetFile;
             string outputDir = _outDir;
-            string target = System.IO.Path.Combine(outputDir, "changes.vcdiff");
+            string outputVcdiff = Path.Combine(outputDir, "changes.vcdiff");
 
             Process xdelta = new Process();
-            xdelta.StartInfo.CreateNoWindow = true;
             if (runningInWindows && run64bitxdelta) xdelta.StartInfo.FileName = "xdelta3.x86_64.exe";
             else xdelta.StartInfo.FileName = "xdelta3"; // Works with xdelta3.exe and xdelta3 package, doesn't work with ./xdelta3
+            xdelta.StartInfo.CreateNoWindow = true;
             xdelta.StartInfo.UseShellExecute = false;
-            xdelta.StartInfo.RedirectStandardOutput = false;
-            xdelta.StartInfo.RedirectStandardError = false;
+
+            // Capture xdelta3 console output. It can be useful
+            xdelta.StartInfo.RedirectStandardOutput = true;
+            xdelta.StartInfo.RedirectStandardError = true;
+            // hookup the eventhandlers to capture the data that is received
+            var sb = new StringBuilder();
+            xdelta.OutputDataReceived += (sender, args) => sb.AppendLine(args.Data);
+            xdelta.ErrorDataReceived += (sender, args) => sb.AppendLine(args.Data);
 
             if (!useCustomParamenter)
             {
-                xdelta.StartInfo.Arguments = "-D -R -f -e -s %source% %patched% %vcdiff%";
+                xdelta.StartInfo.Arguments = "-f -e -s %source% %patched% %vcdiff%";
             }
-            else
-            {
-                xdelta.StartInfo.Arguments = customParamenter;
-            }
-            
-            if (true) xdelta.StartInfo.Arguments = "-D -R " + xdelta.StartInfo.Arguments; // to avoid decompression and recompression on certain format like gz. Can be overriden
+            else { xdelta.StartInfo.Arguments = customParamenter; }
 
-            // Use StandardOutput if the path is long
-            if (useLongPath && isLongPath(target, false))
-            {
-                xdelta.StartInfo.Arguments = "-c " + xdelta.StartInfo.Arguments;
-                xdelta.StartInfo.RedirectStandardOutput = true;
-            }
+            xdelta.StartInfo.Arguments = "-D " + xdelta.StartInfo.Arguments; // disable secondary compression in case of archives like gz. Can be overriden by later paramenters. Doesn't really matter as this app targets fansubbed mkv files.
 
-            // Needs to kill -A option first 'cause xdelta3 always takes the last one
+            xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%source%", quote + sourceFile + quote).Replace("%patched%", quote + targetFile + quote).Replace("%vcdiff%", quote + outputVcdiff + quote);
+
+            // Needs to kill -A option first 'cause xdelta3 always takes the last one, and all options must come before filenames
             xdelta.StartInfo.Arguments = killAOption(xdelta.StartInfo.Arguments);
-            if (useRelativePath) xdelta.StartInfo.Arguments = "-A=\"" + Path.GetFileName(targetFile) + "//" + Path.GetFileName(sourceFile) + "/\" " + xdelta.StartInfo.Arguments;
-            else if (funnyMode)
-                xdelta.StartInfo.Arguments = "-A=\"" + "Don't be lazy like this, d1st" + "//" + "Type the full command instead" + "/\" " + xdelta.StartInfo.Arguments;
-
-            xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%source%", quote + sourceFile + quote).Replace("%patched%", quote + targetFile + quote).Replace("%vcdiff%", quote + target + quote);
+            // See main_set_appheader in xdelta3-main.h for how xdelta3 stores filenames
+            if (funnyMode)
+            {
+                xdelta.StartInfo.Arguments = "-A=\"" + "**STAR**STAR**STAR** Why am I suddenly seeing stars?" + "//" + "The Goddess who Scatters the Stars commands you to either use the provided scripts or type the full command." + "/\" " + xdelta.StartInfo.Arguments;
+            }
+            else if (useRelativePath)
+            {
+                xdelta.StartInfo.Arguments = "-A=\"" + Path.GetFileName(targetFile) + "//" + Path.GetFileName(sourceFile) + "/\" " + xdelta.StartInfo.Arguments;
+            }
 
             if (debugMode) MessageBox.Show(xdelta.StartInfo.Arguments);
+
             xdelta.Start();
+            // Capture xdelta3 console output
+            xdelta.BeginOutputReadLine();
+            xdelta.BeginErrorReadLine();
 
-            // Start BinaryWriter if the path is long
-            if (useLongPath && isLongPath(target, false))
-            {
-                if (debugMode) MessageBox.Show("createOutputFolder: Using StandardOutput & BinaryWriter.");
-                FileStream stream = LongPathFile.Open(target, FileMode.Create, FileAccess.Write);
-                BinaryWriter binaryWriter = new BinaryWriter(stream);
-                BinaryReader binaryReader = new BinaryReader(xdelta.StandardOutput.BaseStream);
-                try {
-                    while (true) binaryWriter.Write(binaryReader.ReadByte()); // Read and write byte by byte. Not efficient but it works and I'm too lazy to invest more
-                }
-                catch (Exception) {  /* Do nothing. An exception will occur when the stream ends. Don't use EndOfStream 'cause it will break the binary reader. */ }
-                binaryWriter.Flush();
-                binaryWriter.Close();
-            }
             xdelta.WaitForExit();
-        }
-
-        /// <summary>
-        /// Copies the file specified in sourcePath to destinationPath. Existing file, if any, will be overwritten without prompt.
-        /// </summary>
-        private void copyFile(string sourcePath, string destinationPath)
-        {
-            FileStream fsSource, fsTarget;
-            if (useLongPath && (isLongPath(sourcePath, false) || isLongPath(destinationPath, false))) // save me one line lol
-            {
-                fsSource = LongPathFile.Open(sourcePath, FileMode.Open, FileAccess.Read);
-                fsTarget = LongPathFile.Open(destinationPath, FileMode.Create, FileAccess.Write);
-            }
-            else
-            {
-                fsSource = System.IO.File.Open(sourcePath, FileMode.Open, FileAccess.Read);
-                fsTarget = System.IO.File.Open(destinationPath, FileMode.Create, FileAccess.Write);
-            }
-
-            BinaryReader brSource = new BinaryReader(fsSource);
-            BinaryWriter bwTarget = new BinaryWriter(fsTarget); 
-
-            try
-            {
-                while (true) bwTarget.Write(brSource.ReadByte());
-            }
-            catch (Exception) { /* Do nothing */ }
-            finally
-            {
-                brSource.Close();
-                bwTarget.Flush();
-                bwTarget.Close();
-            }
+            if (debugMode) MessageBox.Show(sb.ToString());
         }
 
         private void copyXdeltaBinaries(string outputFolder)
         {
-            string source = System.IO.Path.Combine(programDir, (dist64bitxdelta) ? "xdelta3.x86_64.exe" : "xdelta3.exe");
-            string source2 = System.IO.Path.Combine(programDir, "xdelta3");
-            string source3 = System.IO.Path.Combine(programDir, "xdelta3.x86_64");
-            string source4 = System.IO.Path.Combine(programDir, "xdelta3_mac");
-            string target = System.IO.Path.Combine(outputFolder, "xdelta3.exe");
-            string target2 = System.IO.Path.Combine(outputFolder, "xdelta3");
-            string target3 = System.IO.Path.Combine(outputFolder, "xdelta3.x86_64");
-            string target4 = System.IO.Path.Combine(outputFolder, "xdelta3_mac");
+            string source = Path.Combine(programDir, (dist64bitxdelta) ? "xdelta3.x86_64.exe" : "xdelta3.exe");
+            string source2 = Path.Combine(programDir, "xdelta3");
+            string source3 = Path.Combine(programDir, "xdelta3.x86_64");
+            string source4 = Path.Combine(programDir, "xdelta3_mac");
+            string target = Path.Combine(outputFolder, "xdelta3.exe");
+            string target2 = Path.Combine(outputFolder, "xdelta3");
+            string target3 = Path.Combine(outputFolder, "xdelta3.x86_64");
+            string target4 = Path.Combine(outputFolder, "xdelta3_mac");
 
-            if (debugMode)
-            {
-                MessageBox.Show("Source = \"" + source + "\" (" + LongPathFile.Exists(source).ToString() 
-                    + ")\nTarget = \"" + target + "\" (" + LongPathFile.Exists(target).ToString() + ")\n" 
-                    + "Source2 = \"" + source2 + "\" (" + LongPathFile.Exists(source2).ToString() 
-                    + ")\nTarget2 = \"" + target2 + "\" (" + LongPathFile.Exists(target2).ToString() + ")");
-            }
-
-            if (useLongPath && (isLongPath(target2, false) || isLongPath(target, false)))
-            {
-                if (debugMode) MessageBox.Show("copyXdeltaBinaries: long.");
-                copyFile(source, target);
-                copyFile(source2, target2);
-                copyFile(source3, target3);
-                // In case xdelta3_mac is provided
-                if (LongPathFile.Exists(source4)) copyFile(source4, target4);
-            }
-            else
-            {
-                System.IO.File.Copy(source, target, true);
-                System.IO.File.Copy(source2, target2, true);
-                System.IO.File.Copy(source3, target3, true);
-                if (LongPathFile.Exists(source4)) System.IO.File.Copy(source4, target4, true);
-            }
+            File.Copy(source, target, true);
+            File.Copy(source2, target2, true);
+            File.Copy(source3, target3, true);
+            File.Copy(source4, target4, true);
         }
 
         // # %^& must be escaped. \/<>"*:?| are forbidden in win32 filenames. []()!=,;`' work, so not needed
@@ -737,118 +495,81 @@ namespace YAXBPC
             return result;
         }
 
-        private void writeTextToFile(string text, string path)
-        {
-            if (useLongPath && (isLongPath(path, false)))
-            {
-                using (FileStream stream = LongPathFile.Open(path, FileMode.Create, FileAccess.Write))
-                {
-                    using (StreamWriter writer = new StreamWriter(stream))
-                    {
-                        writer.Write(text);
-                        writer.Flush();
-                        writer.Close();
-                    }
-                }
-            }
-            else
-            {
-                System.IO.File.WriteAllText(path, text);
-            }
-        }
-
-        private void appendTextToFile(string text, string path)
-        {
-            if (useLongPath && (isLongPath(path, false)))
-            {
-                using (FileStream stream = LongPathFile.Open(path, FileMode.Append, FileAccess.Write))
-                {
-                    using (StreamWriter writer = new StreamWriter(stream))
-                    {
-                        writer.Write(text);
-                        writer.Flush();
-                        writer.Close();
-                    }
-                }
-            }
-            else
-            {
-                System.IO.File.AppendAllText(path, text);
-            }
-        }
-
         private void createApplyingScripts(string sourceFile, string targetFile, string outputDir)
         {
             // directly copy these alternative scripts to output dir
             string[] alternativeScripts = { "apply_patch_windows_alternative.bat", "apply_patch_mac_alternative.command", "apply_patch_linux_alternative.sh" };
             foreach (string s in alternativeScripts)
             {
-                copyFile(System.IO.Path.Combine(programDir, s), System.IO.Path.Combine(outputDir, s));
+                string source = Path.Combine(programDir, s);
+                string target = Path.Combine(outputDir, s);
+                File.Copy(source, target, true);
             }
 
             // Linux & Mac scripts work with non-ascii filenames
-            string linuxScript = System.IO.File.ReadAllText(System.IO.Path.Combine(programDir, "apply_patch_linux.sh"));
-            string macScript = System.IO.File.ReadAllText(System.IO.Path.Combine(programDir, "apply_patch_mac.command"));
-            string readMe = System.IO.File.ReadAllText(System.IO.Path.Combine(programDir, "how_to_apply_this_patch.txt"));
+            string linuxScript = File.ReadAllText(Path.Combine(programDir, "apply_patch_linux.sh"));
+            string macScript = File.ReadAllText(Path.Combine(programDir, "apply_patch_mac.command"));
+            string readMe = File.ReadAllText(Path.Combine(programDir, "how_to_apply_this_patch.txt"));
 
             readMe = readMe.Replace("&sourcefile&", sourceFile).Replace("&targetfile&", targetFile);
             linuxScript = linuxScript.Replace("&sourcefile&", sourceFile.Replace("'", "'\"'\"'")).Replace("&targetfile&", targetFile.Replace("'", "'\"'\"'"));
             macScript = macScript.Replace("&sourcefile&", sourceFile.Replace("'", "'\"'\"'")).Replace("&targetfile&", targetFile.Replace("'", "'\"'\"'"));
 
             // Unified both scripts. Now only apply_patch_windows.bat
-            string winScript = System.IO.File.ReadAllText(System.IO.Path.Combine(programDir, "apply_patch_windows.bat"));
+            string winScript = File.ReadAllText(Path.Combine(programDir, "apply_patch_windows.bat"));
 
             winScript = winScript.Replace("&sourcefile&", escapeStringForBatch(sourceFile)).Replace("&targetfile&", escapeStringForBatch(targetFile));
-            if (containNonASCIIChar(Path.GetFileName(sourceFile)))
+            if (stringContainsNonASCIIChar(Path.GetFileName(sourceFile)))
             {
                 winScript = winScript.Replace("set movesourcefile=0", "set movesourcefile=1");
             }
-            if (containNonASCIIChar(Path.GetFileName(sourceFile)))
+            if (stringContainsNonASCIIChar(Path.GetFileName(sourceFile)))
             {
                 winScript = winScript.Replace("set movetargetfile=0", "set movetargetfile=1");
             }
-            if (!(containNonASCIIChar(Path.GetFileName(sourceFile) + Path.GetFileName(sourceFile))))
+            if (!(stringContainsNonASCIIChar(Path.GetFileName(sourceFile) + Path.GetFileName(sourceFile))))
             {
                 winScript = winScript.Replace("chcp 65001", "");
             }
 
             // Generate output file paths
-            string macPath = System.IO.Path.Combine(outputDir, "apply_patch_mac.command");
-            string winPath = System.IO.Path.Combine(outputDir, "apply_patch_windows.bat");
-            string linuxPath = System.IO.Path.Combine(outputDir, "apply_patch_linux.sh");
-            string readMePath = System.IO.Path.Combine(outputDir, "how_to_apply_this_patch.txt");
+            string macPath = Path.Combine(outputDir, "apply_patch_mac.command");
+            string winPath = Path.Combine(outputDir, "apply_patch_windows.bat");
+            string linuxPath = Path.Combine(outputDir, "apply_patch_linux.sh");
+            string readMePath = Path.Combine(outputDir, "how_to_apply_this_patch.txt");
 
             // write outputs
-            writeTextToFile(winScript, winPath);
-            writeTextToFile(linuxScript, linuxPath);
-            writeTextToFile(macScript, macPath);
-            writeTextToFile(readMe, readMePath);
+            File.WriteAllText(winPath, winScript);
+            File.WriteAllText(linuxPath, linuxScript);
+            File.WriteAllText(macPath, macScript);
+            File.WriteAllText(readMePath, readMe);
 
             // "Apply all" scripts
             if (addNewPatchToApplyAllScripts)
             {
-                string parentDirPath = System.IO.Directory.GetParent(outputDir).FullName;
+                // Will break if outputDir is the top root dir, but it's user's fault.
+                string parentDirPath = Directory.GetParent(outputDir).FullName;
                 string outputDirName = new DirectoryInfo(outputDir).Name;
                 
-                string applyAllWinPath = System.IO.Path.Combine(parentDirPath, "apply_all_patches_windows.bat");
-                string applyAllLinuxPath = System.IO.Path.Combine(parentDirPath, "apply_all_patches_linux.sh");
-                string applyAllMacPath = System.IO.Path.Combine(parentDirPath, "apply_all_patches_mac.command");
+                string applyAllWinPath = Path.Combine(parentDirPath, "apply_all_patches_windows.bat");
+                string applyAllLinuxPath = Path.Combine(parentDirPath, "apply_all_patches_linux.sh");
+                string applyAllMacPath = Path.Combine(parentDirPath, "apply_all_patches_mac.command");
 
-                if (!System.IO.File.Exists(applyAllLinuxPath))
+                if (!File.Exists(applyAllLinuxPath))
                 {
-                    writeTextToFile("#!/bin/bash\ncd \"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"", applyAllLinuxPath);
+                    File.WriteAllText(applyAllLinuxPath, "#!/bin/sh\ncd \"$(cd \"$(dirname \"$0\")\" && pwd)\"");
                 }
-                if (!System.IO.File.Exists(applyAllMacPath))
+                if (!File.Exists(applyAllMacPath))
                 {
-                    writeTextToFile("#!/bin/bash\ncd \"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"", applyAllMacPath);
+                    File.WriteAllText(applyAllMacPath, "#!/bin/sh\ncd \"$(cd \"$(dirname \"$0\")\" && pwd)\"");
                 }
-                if (!System.IO.File.Exists(applyAllWinPath))
+                if (!File.Exists(applyAllWinPath))
                 {
-                    writeTextToFile("chdir /d %~dp0", applyAllWinPath);
+                    File.WriteAllText(applyAllWinPath, "chdir /d %~dp0\r\n@echo off\r\nsetlocal");
                 }
-                appendTextToFile("\r\ncall \".\\" + outputDirName + "\\apply_patch_windows.bat\"", applyAllWinPath); // use "call blablah.bat"
-                appendTextToFile("\nbash './" + outputDirName + "/apply_patch_linux.sh'", applyAllLinuxPath);
-                appendTextToFile("\nbash './" + outputDirName + "/apply_patch_mac.command'", applyAllMacPath);
+                File.AppendAllText(applyAllWinPath, "\r\ncall \".\\" + outputDirName + "\\apply_patch_windows.bat\""); // use "call blablah.bat"
+                File.AppendAllText(applyAllLinuxPath, "\nsh './" + outputDirName + "/apply_patch_linux.sh'");
+                File.AppendAllText(applyAllMacPath, "\nsh './" + outputDirName + "/apply_patch_mac.command'");
             }
         } 
  
@@ -859,7 +580,7 @@ namespace YAXBPC
             try
             {
                 AddText2Log("Creating output directory...\n");
-                createOutputDir(outputDir);
+                if (!Directory.Exists(outputDir)) Directory.CreateDirectory(outputDir);
             }
             catch (Exception e)
             {
@@ -1073,7 +794,7 @@ namespace YAXBPC
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (System.IO.Directory.Exists(files[0])) e.Effect = DragDropEffects.All; // Check if the first one is an existing folder
+                if (Directory.Exists(files[0])) e.Effect = DragDropEffects.All; // Check if the first one is an existing folder
             }
             else
                 e.Effect = DragDropEffects.None;
@@ -1158,7 +879,7 @@ namespace YAXBPC
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (System.IO.Directory.Exists(files[0])) e.Effect = DragDropEffects.All; // Check if the first one is an existing folder
+                if (Directory.Exists(files[0])) e.Effect = DragDropEffects.All; // Check if the first one is an existing folder
             }
             else
                 e.Effect = DragDropEffects.None;
@@ -1175,7 +896,7 @@ namespace YAXBPC
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (System.IO.Directory.Exists(files[0])) e.Effect = DragDropEffects.All; // Check if the first one is an existing folder
+                if (Directory.Exists(files[0])) e.Effect = DragDropEffects.All; // Check if the first one is an existing folder
             }
             else
                 e.Effect = DragDropEffects.None;
@@ -1301,7 +1022,7 @@ namespace YAXBPC
 
         private void btnCusXdelHelp_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(@"https://code.google.com/p/xdelta/w/list");
+            System.Diagnostics.Process.Start(@"http://xdelta.org/");
         }
 
         private void btnBrowseDefaultOutDir_Click(object sender, EventArgs e)
@@ -1444,9 +1165,9 @@ namespace YAXBPC
                 default: rdbSourceDir.Checked = true; break;
             }
             txtDefaultOutDir.Text = settings.Read("OutDir.txtDefaultOutDir");
-            chbOnlyStoreFileNameInVCDIFF.Checked = (settings.Read("Setting.chbOnlyStoreFileNameInVCDIFF") == "true") ? true : false;
             funnyMode = chbFunnyMode.Checked = (settings.Read("Setting.chbFunnyMode") == "true") ? true : false;
             addNewPatchToApplyAllScripts = chbAddNewPatchToApplyAllScripts.Checked = (settings.Read("Setting.chbAddNewPatchToApplyAllScripts") == "true") ? true : false;
+            chbOnlyStoreFileNameInVCDIFF.Checked = (settings.Read("Setting.chbOnlyStoreFileNameInVCDIFF") == "true") ? true : false; // doesn't work if it's at 2 lines upper. magically works when I moved the line to here. wtf?
         }
 
         private void saveSettings()

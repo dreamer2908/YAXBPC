@@ -448,26 +448,26 @@
             this.removeToolStripMenuItem,
             this.resetToolStripMenuItem});
             this.contextMenuBatchJobList.Name = "contextMenuStrip1";
-            this.contextMenuBatchJobList.Size = new System.Drawing.Size(124, 70);
+            this.contextMenuBatchJobList.Size = new System.Drawing.Size(125, 70);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
@@ -793,7 +793,7 @@
             this.chbFunnyMode.Size = new System.Drawing.Size(84, 17);
             this.chbFunnyMode.TabIndex = 13;
             this.chbFunnyMode.Text = "Funny mode";
-            this.toolTip1.SetToolTip(this.chbFunnyMode, "Check this if you want to troll d1st");
+            this.toolTip1.SetToolTip(this.chbFunnyMode, "Check this if you want to troll a bit. It doesn\'t hurt anything.");
             this.chbFunnyMode.UseVisualStyleBackColor = true;
             this.chbFunnyMode.CheckedChanged += new System.EventHandler(this.chbFunnyMode_CheckedChanged);
             // 

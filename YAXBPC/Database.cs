@@ -85,7 +85,7 @@ namespace YAXBPC
         /// <summary>
         /// Loads data from file
         /// </summary>
-        /// <returns>Error message if any</returns>
+        /// <returns>Error message if any, "OK" if all OK</returns>
         public string Load()
         {
             try
@@ -106,7 +106,7 @@ namespace YAXBPC
             {
                 return e.Message;
             }
-            return null;
+            return "OK";
         }
 
         /// <summary>

@@ -120,6 +120,12 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>697, 17</value>
   </metadata>
+  <data name="btnSetxdeltaHighMem.ToolTip" xml:space="preserve">
+    <value>Sets source buffer size to 512MiB. 
+To ensure compression effeciency, raise it to at least 2x amount of data added/removed. 
+The default setting works well with up to about 32MiB of changes. 
+Use this if there're 32 - 256 MiB of changes.</value>
+  </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>697, 17</value>
   </metadata>
@@ -174,12 +180,6 @@
         AT8C/wQAAfABfwL/BAAB8AP/AwABAQHxA/8CAAGAAQEB8wP/AgABgAEDAfcD/wIAAcABAwT/AgAB/AF/
         BP8CAAs=
 </value>
-  </data>
-  <data name="btnSetxdeltaHighMem.ToolTip" xml:space="preserve">
-    <value>Sets source buffer size to 512MiB. 
-To ensure compression effeciency, raise it to at least 2x amount of data added/removed. 
-The default setting works well with up to about 32MiB of changes. 
-Use this if there're 32 - 256 MiB of changes.</value>
   </data>
   <metadata name="ofdFileBrowser.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
