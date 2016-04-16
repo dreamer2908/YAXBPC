@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2012 - 2014 © Nguyen Hung Quy (dreamer2908)
+   Copyright 2012 - 2016 © Nguyen Hung Quy (dreamer2908)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

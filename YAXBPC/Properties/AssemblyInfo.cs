@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Yet Another xdelta-based Patch Creator")]
-[assembly: AssemblyCopyright("Copyleft © dreamer2908, 2012 - 2014. All wrongs reserved.")]
+[assembly: AssemblyCopyright("Copyleft © dreamer2908, 2012 - 2016. All wrongs reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

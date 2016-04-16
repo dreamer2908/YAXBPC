@@ -68,10 +68,7 @@ namespace YAXBPC
         // Please write any licenses-related information here and include it with the distribution.
 
         // xdelta is licensed under GNU General Public License v2.0. Distributing it in binary form is permitted. 
-        // Go here to get more information and source code/Windows binaries downloads https://code.google.com/p/xdelta/ 
+        // Go here to get more information and source code/Windows binaries downloads http://xdelta.org/
         // Linux binaries are taken from Debian packages pool http://packages.debian.org/search?keywords=xdelta3
-        // Long Path library (Microsoft.Experimental.IO) is licensed under Microsoft Public License (Ms-PL). This license is compatible with Apache License version 2.0.
-        // Please read ALL 3 licenses (which should be found in the folder "Legal stuff") before making any changes to avoid any problems with intellectual property laws.
-        // 
     }
 }
