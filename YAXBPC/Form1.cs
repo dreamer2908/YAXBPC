@@ -457,6 +457,11 @@ namespace YAXBPC
 
             xdelta.WaitForExit();
             if (debugMode) MessageBox.Show(sb.ToString());
+
+            if (xdelta.ExitCode != 0) // I, right here, abuse exception. Feel free to sue me.
+            {
+                throw new Exception(sb.ToString().Trim());
+            }
         }
 
         private void copyXdeltaBinaries(string outputFolder)
@@ -573,10 +578,8 @@ namespace YAXBPC
             }
         } 
  
-        private void createOnePatch(string sourceFile, string targetFile, string outputDir)
+        private void createPatchBackground_sub(string sourceFile, string targetFile, string outputDir)
         {
-            Boolean ShowError = false;
-
             try
             {
                 AddText2Log("Creating output directory...\n");
@@ -584,9 +587,8 @@ namespace YAXBPC
             }
             catch (Exception e)
             {
-                AddText2Log("Task failed: " + e.Message + "\n");
-                if (ShowError) MessageBox.Show(e.Message);
-                //return;
+                AddText2Log("Task failed: " + e.Message + "\n\n");
+                return;
             }
             
             try
@@ -596,9 +598,8 @@ namespace YAXBPC
             }
             catch (Exception e)
             {
-                AddText2Log("Task failed: " + e.Message + "\n");
-                if (ShowError) MessageBox.Show(e.Message);
-                //return;
+                AddText2Log("Task failed: " + e.Message + "\n\n");
+                return;
             }
 
             createApplyingScripts(Path.GetFileName(sourceFile), Path.GetFileName(targetFile), outputDir);
@@ -608,9 +609,8 @@ namespace YAXBPC
             }
             catch (Exception e)
             {
-                AddText2Log("Task failed: " + e.Message + "\n");
-                if (ShowError) MessageBox.Show(e.Message);
-                //return;
+                AddText2Log("Task failed: " + e.Message + "\n\n");
+                return;
             }
             
             try
@@ -620,9 +620,8 @@ namespace YAXBPC
             }
             catch (Exception e)
             {
-                AddText2Log("Task failed: " + e.Message + "\n");
-                if (ShowError) MessageBox.Show(e.Message);
-                //return;
+                AddText2Log("Task failed: " + e.Message + "\n\n");
+                return;
             }
             
             AddText2Log("Done.\n\n");
@@ -636,7 +635,7 @@ namespace YAXBPC
                 if (txtSourceFile.Text.Trim().Equals(String.Empty)) AddText2Log("Please specify the source file.\n\n");
                 else if (txtTargetFile.Text.Trim().Equals(String.Empty)) AddText2Log("Please specify the target file.\n\n");
                 else if (txtOutputDir.Text.Trim().Equals(String.Empty)) AddText2Log("Please specify the output directory.\n\n"); 
-                else createOnePatch(txtSourceFile.Text, txtTargetFile.Text, txtOutputDir.Text);
+                else createPatchBackground_sub(txtSourceFile.Text, txtTargetFile.Text, txtOutputDir.Text);
             }
             else
             {
@@ -650,7 +649,7 @@ namespace YAXBPC
                         {
                             if (copyTask(n))
                             {
-                                createOnePatch(sourceFile_currentJob, targetFile_currentJob, outputDir_currentJob);
+                                createPatchBackground_sub(sourceFile_currentJob, targetFile_currentJob, outputDir_currentJob);
                                 setTaskFinished(n);
                             }
                             getNumOfTask(); // Re-get the number of task(s) in case task(s) added/removed
