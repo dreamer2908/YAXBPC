@@ -552,8 +552,12 @@ namespace YAXBPC
             // "Apply all" scripts
             if (addNewPatchToApplyAllScripts)
             {
-                // Will break if outputDir is the top root dir, but it's user's fault.
-                string parentDirPath = Directory.GetParent(outputDir).FullName;
+                DirectoryInfo directoryInfo = Directory.GetParent(outputDir);
+                if (directoryInfo == null)
+                {
+                    throw new Exception("\"Apply all\" scripts can't be created if the output directory is the root directory as they need to be in one level upper."); // I, right here, abuse exception. Feel free to sue me.
+                }
+                string parentDirPath = directoryInfo.FullName;
                 string outputDirName = new DirectoryInfo(outputDir).Name;
                 
                 string applyAllWinPath = Path.Combine(parentDirPath, "apply_all_patches_windows.bat");
@@ -602,10 +606,10 @@ namespace YAXBPC
                 return;
             }
 
-            createApplyingScripts(Path.GetFileName(sourceFile), Path.GetFileName(targetFile), outputDir);
             try
             {
                 AddText2Log("Creating applying scripts...\n");
+                createApplyingScripts(Path.GetFileName(sourceFile), Path.GetFileName(targetFile), outputDir);
             }
             catch (Exception e)
             {
