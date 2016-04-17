@@ -117,6 +117,7 @@
             this.bgwApplyPatch = new System.ComponentModel.BackgroundWorker();
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.tabpgCreatePatch.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -681,7 +682,7 @@
             this.groupBox10.Size = new System.Drawing.Size(432, 49);
             this.groupBox10.TabIndex = 2;
             this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "VCDIFF File";
+            this.groupBox10.Text = "Delta File";
             // 
             // btnBrowseApplyVcdiffFile
             // 
@@ -1113,7 +1114,7 @@
             // 
             // ofdFileBrowser
             // 
-            this.ofdFileBrowser.Filter = "All files|*.*|MKV Files|*.mkv|MP4 Files|*.mp4";
+            this.ofdFileBrowser.Filter = "All files (*.*)|*.*|Matroska Files|*.mkv|MPEG-4 Files|*.mp4";
             // 
             // btnExit
             // 
@@ -1149,7 +1150,16 @@
             // 
             // openFileDialog2
             // 
-            this.openFileDialog2.Filter = "All files|*.*|MKV Files|*.mkv|MP4 Files|*.mp4";
+            this.openFileDialog2.Filter = "All files (*.*)|*.*|Matroska Files|*.mkv|MPEG-4 Files|*.mp4";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "All files (*.*)|*.*|Matroska Files|*.mkv|MPEG-4 Files|*.mp4";
+            // 
+            // openFileDialog3
+            // 
+            this.openFileDialog3.Filter = "Delta files (*.vcdiff; *.delta; *.xdelta3)|*.vcdiff;*.delta;*.xdelta3|All files (" +
+                "*.*)|*.*";
             // 
             // frmMain
             // 
@@ -1288,6 +1298,7 @@
         private System.Windows.Forms.Button btnBatchLoadDirs;
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.CheckBox chbAddNewPatchToApplyAllScripts;
+        private System.Windows.Forms.OpenFileDialog openFileDialog3;
     }
 }
 

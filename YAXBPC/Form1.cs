@@ -1155,7 +1155,7 @@ namespace YAXBPC
 
         private void btnBrowseApplyVcdiffFile_Click(object sender, EventArgs e)
         {
-            if (openFileDialog2.ShowDialog() == DialogResult.OK) txtApplyVcdiffFile.Text = openFileDialog2.FileName;
+            if (openFileDialog3.ShowDialog() == DialogResult.OK) txtApplyVcdiffFile.Text = openFileDialog3.FileName;
         }
 
         private void btnBrowseApplyOutput_Click(object sender, EventArgs e)
