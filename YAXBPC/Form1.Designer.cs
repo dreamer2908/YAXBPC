@@ -272,7 +272,7 @@
             this.txtOutputDir.Name = "txtOutputDir";
             this.txtOutputDir.Size = new System.Drawing.Size(384, 20);
             this.txtOutputDir.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.txtOutputDir, "Drop a directory here~");
+            this.toolTip1.SetToolTip(this.txtOutputDir, "You can drop a directory here~");
             this.txtOutputDir.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtOutputDir_DragDrop);
             this.txtOutputDir.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtOutputDir_DragEnter);
             // 
@@ -311,7 +311,7 @@
             this.txtTargetFile.Name = "txtTargetFile";
             this.txtTargetFile.Size = new System.Drawing.Size(384, 20);
             this.txtTargetFile.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.txtTargetFile, "Drop a file here~");
+            this.toolTip1.SetToolTip(this.txtTargetFile, "You can drop a file here~");
             this.txtTargetFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtTargetFile_DragDrop);
             this.txtTargetFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtTargetFile_DragEnter);
             // 
@@ -350,7 +350,7 @@
             this.txtSourceFile.Name = "txtSourceFile";
             this.txtSourceFile.Size = new System.Drawing.Size(384, 20);
             this.txtSourceFile.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.txtSourceFile, "Drop a file here~");
+            this.toolTip1.SetToolTip(this.txtSourceFile, "You can drop a file here~");
             this.txtSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtSourceFile_DragDrop);
             this.txtSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtSourceFile_DragEnter);
             // 
@@ -666,7 +666,7 @@
             this.txtApplyOutput.Name = "txtApplyOutput";
             this.txtApplyOutput.Size = new System.Drawing.Size(384, 20);
             this.txtApplyOutput.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.txtApplyOutput, "Drop a directory here~");
+            this.toolTip1.SetToolTip(this.txtApplyOutput, "You can drop a file here~");
             this.txtApplyOutput.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtApplyOutput_DragDrop);
             this.txtApplyOutput.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtApplyOutput_DragEnter);
             // 
@@ -705,7 +705,7 @@
             this.txtApplyVcdiffFile.Name = "txtApplyVcdiffFile";
             this.txtApplyVcdiffFile.Size = new System.Drawing.Size(384, 20);
             this.txtApplyVcdiffFile.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.txtApplyVcdiffFile, "Drop a file here~");
+            this.toolTip1.SetToolTip(this.txtApplyVcdiffFile, "You can drop a file here~");
             this.txtApplyVcdiffFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtApplyVcdiffFile_DragDrop);
             this.txtApplyVcdiffFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtApplyVcdiffFile_DragEnter);
             // 
@@ -744,7 +744,7 @@
             this.txtApplySource.Name = "txtApplySource";
             this.txtApplySource.Size = new System.Drawing.Size(384, 20);
             this.txtApplySource.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.txtApplySource, "Drop a file here~");
+            this.toolTip1.SetToolTip(this.txtApplySource, "You can drop a file here~");
             this.txtApplySource.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtApplySource_DragDrop);
             this.txtApplySource.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtApplySource_DragEnter);
             // 
