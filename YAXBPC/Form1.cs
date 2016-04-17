@@ -672,40 +672,65 @@ namespace YAXBPC
                 AddText2ApplyLog("Please specify the vcdiff file.\n\n");
                 return;
             }
-            else if (txtApplyOutput.Text.Trim().Equals(String.Empty))
-            {
-                AddText2ApplyLog("Please specify the output file.\n\n");
-                return;
-            }
+            //else if (txtApplyOutput.Text.Trim().Equals(String.Empty)) # output fname is not a compulsory paramenter if it has been already stored in vcdiff's header
+            //{
+            //    AddText2ApplyLog("Please specify the output file.\n\n");
+            //    return;
+            //}
 
             string inputFile = txtApplySource.Text;
             try
             {
                 AddText2ApplyLog("Attempting to patch \"" + Path.GetFileName(inputFile) + "\"...\n");
-                applyOnePatch(txtApplySource.Text, txtApplyVcdiffFile.Text, txtApplyOutput.Text);
+                string result = applyOnePatch(txtApplySource.Text, txtApplyVcdiffFile.Text, txtApplyOutput.Text);
+                AddText2ApplyLog(result.Trim() + "\n\n");
+
             }
             catch (Exception ex)
             {
                 AddText2ApplyLog("Task failed: " + ex.Message + "\n");
                 return;
             }
-            AddText2ApplyLog("Done. \n\n");
         }
 
-        private void applyOnePatch(string sourceFile, string vcdiffFile, string outputFile)
+        private string applyOnePatch(string sourceFile, string vcdiffFile, string outputFile)
         {
             Process xdelta = new Process();
-            xdelta.StartInfo.CreateNoWindow = true;
             if (runningInWindows && run64bitxdelta) xdelta.StartInfo.FileName = "xdelta3.x86_64.exe"; 
             else xdelta.StartInfo.FileName = "xdelta3"; // Works with xdelta3.exe and xdelta3 package, doesn't work with ./xdelta3
+            xdelta.StartInfo.CreateNoWindow = true;
             xdelta.StartInfo.UseShellExecute = false;
-            xdelta.StartInfo.RedirectStandardOutput = xdelta.StartInfo.RedirectStandardError = false;
+
+            // Capture xdelta3 console output. It can be useful
+            xdelta.StartInfo.RedirectStandardOutput = true;
+            xdelta.StartInfo.RedirectStandardError = true;
+            // hookup the eventhandlers to capture the data that is received
+            var sb = new StringBuilder();
+            xdelta.OutputDataReceived += (sender, args) => sb.AppendLine(args.Data);
+            xdelta.ErrorDataReceived += (sender, args) => sb.AppendLine(args.Data);
 
             string paramenters = (chbUseCustomXdeltaParamsForApplying.Checked) ? txtCustomXdeltaParamsForApplying.Text : "-d -f -s %source% %vcdiff% %output%";
-            xdelta.StartInfo.Arguments = paramenters.Replace("%source%", quote + sourceFile + quote).Replace("%vcdiff%", quote + vcdiffFile + quote).Replace("%output%", quote + outputFile + quote);
+            xdelta.StartInfo.Arguments = paramenters.Replace("%source%", quote + sourceFile + quote).Replace("%vcdiff%", quote + vcdiffFile + quote);
+            if (outputFile != "") // don't trim it, as filename consisting of all spaces is also valid
+            {
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%output%", quote + outputFile + quote);
+            }
+            else
+            {
+                // output is not specified. Handle thing a little differently
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%output%", "");
+                xdelta.StartInfo.WorkingDirectory = Path.GetDirectoryName(sourceFile);
+            }
 
             xdelta.Start();
+            // Capture xdelta3 console output
+            xdelta.BeginOutputReadLine();
+            xdelta.BeginErrorReadLine();
+
             xdelta.WaitForExit();
+            if (debugMode) MessageBox.Show(sb.ToString());
+
+            return (xdelta.ExitCode == 0)? "All OK." : "Error: " + sb.ToString();
         }
 
         #endregion
