@@ -432,7 +432,7 @@ namespace YAXBPC
             }
             else { xdelta.StartInfo.Arguments = customParamenter; }
 
-            xdelta.StartInfo.Arguments = "-D " + xdelta.StartInfo.Arguments; // disable secondary compression in case of archives like gz. Can be overriden by later paramenters. Doesn't really matter as this app targets fansubbed mkv files.
+            xdelta.StartInfo.Arguments = "-D " + xdelta.StartInfo.Arguments; // disable external decompression in case of archives like gz. Can be overriden by later paramenters. Doesn't really matter as this app targets fansubbed mkv files.
 
             xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%source%", quote + sourceFile + quote).Replace("%patched%", quote + targetFile + quote).Replace("%vcdiff%", quote + outputVcdiff + quote);
 
@@ -511,14 +511,14 @@ namespace YAXBPC
                 File.Copy(source, target, true);
             }
 
-            // Linux & Mac scripts work with non-ascii filenames
+            // Linux & Mac scripts seamlessly work with non-ascii filenames.
             string linuxScript = File.ReadAllText(Path.Combine(programDir, "apply_patch_linux.sh"));
             string macScript = File.ReadAllText(Path.Combine(programDir, "apply_patch_mac.command"));
             string readMe = File.ReadAllText(Path.Combine(programDir, "how_to_apply_this_patch.txt"));
 
             readMe = readMe.Replace("&sourcefile&", sourceFile).Replace("&targetfile&", targetFile);
-            linuxScript = linuxScript.Replace("&sourcefile&", sourceFile.Replace("'", "'\"'\"'")).Replace("&targetfile&", targetFile.Replace("'", "'\"'\"'"));
-            macScript = macScript.Replace("&sourcefile&", sourceFile.Replace("'", "'\"'\"'")).Replace("&targetfile&", targetFile.Replace("'", "'\"'\"'"));
+            linuxScript = linuxScript.Replace("&sourcefile&", sourceFile.Replace("'", "'\"'\"'")).Replace("&targetfile&", targetFile.Replace("'", "'\"'\"'")); // quote all single quotes as fnames are quoted in single quotes
+            macScript = macScript.Replace("&sourcefile&", sourceFile.Replace("'", "'\"'\"'")).Replace("&targetfile&", targetFile.Replace("'", "'\"'\"'")); // just replace ' with '"'"' (single, double, single, double, single)
 
             // Unified both scripts. Now only apply_patch_windows.bat
             string winScript = File.ReadAllText(Path.Combine(programDir, "apply_patch_windows.bat"));
