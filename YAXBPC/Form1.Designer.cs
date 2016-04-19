@@ -1158,8 +1158,8 @@
             // 
             // openFileDialog3
             // 
-            this.openFileDialog3.Filter = "Delta files (*.vcdiff; *.delta; *.xdelta3)|*.vcdiff;*.delta;*.xdelta3|All files (" +
-                "*.*)|*.*";
+            this.openFileDialog3.Filter = "Delta files (*.vcdiff; *.delta; *.xdelta3; *.xdelta)|*.vcdiff;*.delta;*.xdelta3;*" +
+                ".xdelta|All files (*.*)|*.*";
             // 
             // frmMain
             // 
