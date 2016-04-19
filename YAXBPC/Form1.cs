@@ -1094,7 +1094,6 @@ namespace YAXBPC
         private void chbFunnyMode_CheckedChanged(object sender, EventArgs e)
         {
             funnyMode = chbFunnyMode.Checked;
-            chbOnlyStoreFileNameInVCDIFF.Checked = !chbFunnyMode.Checked;
         }
 
         private void chbAddNewPatchToApplyAllScripts_CheckedChanged(object sender, EventArgs e)
