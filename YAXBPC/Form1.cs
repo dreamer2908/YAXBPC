@@ -665,14 +665,14 @@ namespace YAXBPC
 
         private void applyPatchBackground(object sender, DoWorkEventArgs e)
         {
-            if (txtApplySource.Text.Trim().Equals(String.Empty))
+            //if (txtApplySource.Text.Trim().Equals(String.Empty)) # input fname is also not a compulsory paramenter if it has been already stored in vcdiff's header
+            //{
+            //    AddText2ApplyLog("Please specify the source file.\n\n");
+            //    return;
+            //}
+            if (txtApplyVcdiffFile.Text.Trim().Equals(String.Empty))
             {
-                AddText2ApplyLog("Please specify the source file.\n\n");
-                return;
-            }
-            else if (txtApplyVcdiffFile.Text.Trim().Equals(String.Empty))
-            {
-                AddText2ApplyLog("Please specify the vcdiff file.\n\n");
+                AddText2ApplyLog("Please specify the delta file.\n\n");
                 return;
             }
             //else if (txtApplyOutput.Text.Trim().Equals(String.Empty)) # output fname is not a compulsory paramenter if it has been already stored in vcdiff's header
@@ -691,7 +691,7 @@ namespace YAXBPC
             }
             catch (Exception ex)
             {
-                AddText2ApplyLog("Task failed: " + ex.Message + "\n");
+                AddText2ApplyLog("Task failed: " + ex.Message.Trim() + "\n\n");
                 return;
             }
         }
@@ -713,17 +713,35 @@ namespace YAXBPC
             xdelta.ErrorDataReceived += (sender, args) => sb.AppendLine(args.Data);
 
             string paramenters = (chbUseCustomXdeltaParamsForApplying.Checked) ? txtCustomXdeltaParamsForApplying.Text : "-d -f -s %source% %vcdiff% %output%";
-            xdelta.StartInfo.Arguments = paramenters.Replace("%source%", quote + sourceFile + quote).Replace("%vcdiff%", quote + vcdiffFile + quote);
-            if (outputFile != "") // don't trim it, as filename consisting of all spaces is also valid
+            xdelta.StartInfo.Arguments = paramenters.Replace("%vcdiff%", quote + vcdiffFile + quote);
+            if (outputFile == "" && sourceFile != "") // don't trim it, as filename consisting of all spaces is also valid
             {
+                // output is not specified but source is. Handle thing a little differently
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%output%", "");
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%source%", quote + sourceFile + quote);
+                xdelta.StartInfo.WorkingDirectory = Path.GetDirectoryName(sourceFile);
+            }
+            else if (outputFile != "" && sourceFile == "")
+            {
+                // output is specified but source is not. Handle thing a little differently
                 xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%output%", quote + outputFile + quote);
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%source%", "").Replace("-s ", ""); // will be improved when a paramenter parser is implemented
+                xdelta.StartInfo.WorkingDirectory = Path.GetDirectoryName(vcdiffFile);
+            }
+            else if (outputFile == "" && sourceFile == "")
+            {
+                // both source and output are not specified. Handle thing a little differently
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%output%", "");
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%source%", "").Replace("-s ", ""); // will be improved when a paramenter parser is implemented
+                xdelta.StartInfo.WorkingDirectory = Path.GetDirectoryName(vcdiffFile);
             }
             else
             {
-                // output is not specified. Handle thing a little differently
-                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%output%", "");
-                xdelta.StartInfo.WorkingDirectory = Path.GetDirectoryName(sourceFile);
+                // normal case: both source and output are specified
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%output%", quote + outputFile + quote);
+                xdelta.StartInfo.Arguments = xdelta.StartInfo.Arguments.Replace("%source%", quote + sourceFile + quote);
             }
+            if (debugMode) MessageBox.Show(xdelta.StartInfo.WorkingDirectory);
 
             xdelta.Start();
             // Capture xdelta3 console output
