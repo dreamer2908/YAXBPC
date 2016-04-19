@@ -1,4 +1,4 @@
-Hi there! Yes, you!
+﻿Hi there! Yes, you!
 
 In short:
 - Move your original file (&sourcefile&) into this folder, or this folder's parent folder. For example: all these patches, scripts, xdelta3 binaries, how_to_appply_this_patch.txt are in folder Entertain/Animu/Nourin/patch_ep_01_v2. You should put it in either patch_ep_01_v2, Nourin, Animu, or Entertain. These scripts will first look for it in patch_ep_01_v2; if it can't find it there, it will look in Nourin, and then Animu, and finally Entertain. If the file can't be found in these four location, the scripts will give up. Please don't troll these poor scripts. Thanks.
