@@ -62,10 +62,11 @@ run_patch () {
 	echo "Attempting to patch..."
 	if [ ! -z "$sourcefile" ] && [ ! "$sourcefile" = " " ]; then
 		`$app -d -f -s "$sourcefile" "$changes"`
+		return $?
 	else
 		`$app -d -f "$changes"`
+		return $?
 	fi
-	return 0
 }
 
 if find_xdelta3 && find_inputs; then

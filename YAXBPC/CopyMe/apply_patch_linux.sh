@@ -79,7 +79,7 @@ find_inputs() {
 run_patch () {
 	echo "Attempting to patch \"$sourcefile\"..."
 	`$app -d -f -s "$sourcefile" "$changes" "$targetfile"`
-	return 0
+	return $?
 }
 
 move_old_file () {
@@ -87,10 +87,11 @@ move_old_file () {
 		mkdir -p "$olddir" >/dev/null
 		if mv "$sourcefile" "$olddir/"; then
 			echo "Moved the old file to directory \"$olddir\"."
+			return 0
 		else
 			echo "Warning: Couldn't moved the old file."
+			return 1
 		fi
-		return 0
 	fi
 	return 0
 }
