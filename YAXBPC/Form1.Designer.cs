@@ -902,9 +902,9 @@
             this.chbOnlyStoreFileNameInVCDIFF.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbOnlyStoreFileNameInVCDIFF.Location = new System.Drawing.Point(6, 141);
             this.chbOnlyStoreFileNameInVCDIFF.Name = "chbOnlyStoreFileNameInVCDIFF";
-            this.chbOnlyStoreFileNameInVCDIFF.Size = new System.Drawing.Size(286, 17);
+            this.chbOnlyStoreFileNameInVCDIFF.Size = new System.Drawing.Size(296, 17);
             this.chbOnlyStoreFileNameInVCDIFF.TabIndex = 17;
-            this.chbOnlyStoreFileNameInVCDIFF.Text = "Store only filenames in VCDIFF files instead of full paths";
+            this.chbOnlyStoreFileNameInVCDIFF.Text = "Store only bare filenames in delta files instead of full paths";
             this.toolTip1.SetToolTip(this.chbOnlyStoreFileNameInVCDIFF, "Still works even when the input files are in two different folders.");
             this.chbOnlyStoreFileNameInVCDIFF.UseVisualStyleBackColor = true;
             // 
