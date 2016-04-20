@@ -16,9 +16,13 @@
 
 /*
 TODO:
- * Make killAOption less dirty
- * Work on chbNewAutoName
- * Do something with btnBatchLoadDirs
+ * Make a parementer parser to replace killAOption and the quick-a-dirty paramenter killing lines in applyOnePatch
+ * Work on chbNewAutoName.
+   + Inputs: "[Ecchihiro]_Netoge_no_Yome_wa_Onnanoko_ja_Nai_to_Omotta？_-_01_[720p_Hi10P_AAC][D232A51F].mkv"
+     and "[Ecchihiro]_Netoge_no_Yome_wa_Onnanoko_ja_Nai_to_Omotta？_-_01v2_[720p_Hi10P_AAC][56298581].mkv"
+   + Output: "patch_01_[D232A51F]_to_01v2_[56298581]" or anything informative like that
+   + A "spot the difference" function maybe? Simply ep+ver+CRC maybe?
+ * Do something with btnBatchLoadDirs. Remove or make it work?
  * */
 
 using System;
