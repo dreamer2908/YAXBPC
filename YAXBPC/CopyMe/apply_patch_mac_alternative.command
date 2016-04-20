@@ -20,7 +20,7 @@ olddir="old"
 
 find_xdelta3() {
 	chmod +x ./xdelta3_mac 2>/dev/null
-	if [ -x ./xdelta3_mac ] && file ./xdelta3_mac | grep -q "Mach-O"; then
+	if [ "x`uname -s`" = "xDarwin" ] && [ -x ./xdelta3_mac ] && file ./xdelta3_mac | grep -q "Mach-O"; then
 		app="./xdelta3_mac"
 	elif hash xdelta3 2>/dev/null; then
 		app="xdelta3"
