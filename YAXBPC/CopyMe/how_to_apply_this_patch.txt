@@ -3,6 +3,7 @@
 In short:
 - Move your original file (&sourcefile&) into this folder, or this folder's parent folder. For example: all these patches, scripts, xdelta3 binaries, how_to_appply_this_patch.txt are in folder Entertain/Animu/Nourin/patch_ep_01_v2. You should put it in either patch_ep_01_v2, Nourin, Animu, or Entertain. These scripts will first look for it in patch_ep_01_v2; if it can't find it there, it will look in Nourin, and then Animu, and finally Entertain. If the file can't be found in these four location, the scripts will give up. Please don't troll these poor scripts. Thanks.
 - Run the applying script written for your operating system: for Windows, apply_patch_windows.bat; for Linux/Unix, apply_patch_linux.sh; for Mac OSX, apply_patch_mac.command.
+- Alternative, you can drag-n-drop your original file onto the applying script. You don't need to move your file as told above if you choose this way. Only available in YAXBPC v2.1.0 or later.
 - Check if a new file was created (&targetfile&). If true, you're successful, so stop here.
 - If not, try the alternative script and check the output again. Comment: if used correctly, only windows scripts in legacy versions of windows have some real chance of failure. Otherwise, it shouldn't fail at all.
 - If the alternative script fails, redo carefully from the first step.
