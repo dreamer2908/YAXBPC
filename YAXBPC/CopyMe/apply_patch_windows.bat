@@ -20,14 +20,14 @@ set WORKINGDIR=%CD%
 chdir /d %~dp0
 (call )
 
-call :find_xdelta3 && call :find_inputs && call :run_patch
+call :find_xdelta3 && call :find_inputs "%~1" && call :run_patch
 call :gtfo
 goto :eof
 
 
 :find_xdelta3
 (call)
-if exist "%changes%" (
+if exist "%app%" (
 	(call )
 ) else (
 	echo The required application "%app%" can't be found!
@@ -37,7 +37,11 @@ goto :eof
 :find_inputs
 (call)
 if exist "%~1" (
-    set sourcefile=%~1
+    set "sourcefile=%~f1"
+    set "targetfile=%~dp1%targetfile%"
+    set "sourcefiletmp=%~dp1%sourcefiletmp%"
+    set "targetfiletmp=%~dp1%targetfiletmp%"
+    set "olddir=%~dp1%olddir%"
 	(call )
 )
 if not exist "%sourcefile%" (
@@ -75,7 +79,7 @@ if not exist "%sourcefile%" (
 	(call )
 )
 if not exist "%changes%" (
-	echo Error: VCDIFF file \"$changes\" is missing.
+	echo Error: VCDIFF file "%changes%" is missing.
 	echo Please extract everything from the archive.
 	(call)
 )

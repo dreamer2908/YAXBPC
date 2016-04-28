@@ -1,5 +1,5 @@
 #!/bin/sh
-set -o nounset
+# Do not use nounset here
 # Do not use errexit here
 
 # Roses are red, violets are blue, sugar is sweet, and so are you.
@@ -9,6 +9,7 @@ WORKINGDIR=$(pwd)
 SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPTDIR"
 args="$@"
+dropin="$1"
 
 sourcefile='&sourcefile&'
 targetfile='&targetfile&'
@@ -36,11 +37,13 @@ find_xdelta3() {
 }
 
 find_inputs() {
-	if [ ! -z "$args" ] && [ ! "$args" = " " ]; then
-		if [ -f "$args" ]; then
-			sourcefile=$@
+	if [ ! -z "$dropin" ] && [ ! "$dropin" = " " ]; then
+		if [ -f "$dropin" ]; then
+			sourcefile="$dropin"
+            targetfile="$(dirname "$sourcefile")/$targetfile"
+            olddir="$(dirname "$sourcefile")/$olddir"
 		else
-			echo "Warning: Input file \"$args\" is not found. Ignored."
+			echo "Warning: Input file \"$dropin\" is not found. Ignored."
 		fi
 	fi
 	if [ ! -f "$sourcefile" ]; then

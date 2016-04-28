@@ -1,6 +1,6 @@
 #!/bin/sh
-set -o nounset
-set -o errexit
+# Do not use nounset here
+# Do not use errexit here
 
 # Roses are red, violets are blue, sugar is sweet, and so are you.
 # Enjoy your usual ratio: 5% of lines do the actual work, and the rest are there to make sure they work. (It's like 1%, actually)
@@ -12,6 +12,7 @@ WORKINGDIR=$(pwd)
 SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPTDIR"
 args="$@"
+dropin="$1"
 
 sourcefile=''
 targetfile=''
@@ -36,14 +37,11 @@ find_xdelta3() {
 }
 
 find_inputs() {
-	found=0
-	if [ ! -z "$args" ] && [ ! "$args" = " " ]; then
-		if [ -f "$args" ]; then
-			sourcefile=$@
-			found=1
+	if [ ! -z "$dropin" ] && [ ! "$dropin" = " " ]; then
+		if [ -f "$dropin" ]; then
+			sourcefile="$dropin"
 		else
-			echo "Warning: Input file \"$args\" is not found. Ignored."
-			found=0
+			echo "Warning: Input file \"$dropin\" is not found. Ignored."
 		fi
 	fi
 	if [ ! -f "$changes" ]; then
