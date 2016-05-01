@@ -7,7 +7,7 @@ rem Enjoy your usual ratio: 5% of lines do the actual work, and the rest are the
 set app=xdelta3.exe
 set changes=changes.vcdiff
 set WORKINGDIR=%CD%
-chdir /d %~dp0
+chdir /d "%~dp0"
 
 if exist "%~1" (
     echo Attempting to patch %~1...
@@ -17,7 +17,7 @@ if exist "%~1" (
     %app% -d -f "%changes%"
 )
 echo Done. Press enter to exit.
-chdir /d %WORKINGDIR%
+chdir /d "%WORKINGDIR%"
 pause
 exit /b
 

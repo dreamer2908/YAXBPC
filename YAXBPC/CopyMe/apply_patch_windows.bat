@@ -17,7 +17,7 @@ set movesourcefile=0
 set movetargetfile=0
 set olddir=old
 set WORKINGDIR=%CD%
-chdir /d %~dp0
+chdir /d "%~dp0"
 (call )
 
 call :find_xdelta3 && call :find_inputs "%~1" && call :run_patch
@@ -109,7 +109,7 @@ pause
 goto :eof
 
 :gtfo
-chdir /d %WORKINGDIR%
+chdir /d "%WORKINGDIR%"
 chcp %cp%>nul
 (call )
 goto :eof
