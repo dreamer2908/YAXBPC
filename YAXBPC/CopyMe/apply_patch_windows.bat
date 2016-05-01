@@ -97,8 +97,8 @@ if %movetargetfile% equ 0 set "targetfiletmp=%targetfile%"
 if %movesourcefile% equ 1 move "%sourcefiletmp%" "%sourcefile%" > nul
 if %movetargetfile% equ 1 move "%targetfiletmp%" "%targetfile%" > nul
 if exist "%targetfile%" (
-	mkdir %olddir% 2>nul
-	move "%sourcefile%" %olddir%
+	mkdir "%olddir%" 2>nul
+	move "%sourcefile%" "%olddir%"
 	echo Done.
 	(call )
 	goto :eof
