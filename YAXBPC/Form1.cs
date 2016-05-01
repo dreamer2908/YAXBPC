@@ -532,11 +532,11 @@ namespace YAXBPC
             {
                 winScript = winScript.Replace("set movesourcefile=0", "set movesourcefile=1");
             }
-            if (stringContainsNonASCIIChar(Path.GetFileName(sourceFile)))
+            if (stringContainsNonASCIIChar(Path.GetFileName(targetFile)))
             {
                 winScript = winScript.Replace("set movetargetfile=0", "set movetargetfile=1");
             }
-            if (!(stringContainsNonASCIIChar(Path.GetFileName(sourceFile) + Path.GetFileName(sourceFile))))
+            if (!(stringContainsNonASCIIChar(Path.GetFileName(sourceFile) + Path.GetFileName(targetFile))))
             {
                 winScript = winScript.Replace("chcp 65001", "rem chcp 65001");
             }
