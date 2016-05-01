@@ -538,7 +538,7 @@ namespace YAXBPC
             }
             if (!(stringContainsNonASCIIChar(Path.GetFileName(sourceFile) + Path.GetFileName(sourceFile))))
             {
-                winScript = winScript.Replace("chcp 65001", "");
+                winScript = winScript.Replace("chcp 65001", "rem chcp 65001");
             }
 
             // Generate output file paths
