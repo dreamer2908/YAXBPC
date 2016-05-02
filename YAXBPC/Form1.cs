@@ -415,6 +415,26 @@ namespace YAXBPC
             string targetFile = _targetFile;
             string outputDir = _outDir;
             string outputVcdiff = Path.Combine(outputDir, "changes.vcdiff");
+            bool plsDelSourceFile = false;
+            bool plsDelTargetFile = false;
+
+            if (runningInWindows)
+            {
+                if (sourceFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                {
+                    string tmpFname = Path.GetRandomFileName();
+                    File.Copy(sourceFile, tmpFname, true);
+                    sourceFile = tmpFname;
+                    plsDelSourceFile = true;
+                }
+                if (targetFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                {
+                    string tmpFname = Path.GetRandomFileName();
+                    File.Copy(targetFile, tmpFname, true);
+                    targetFile = tmpFname;
+                    plsDelTargetFile = true;
+                }
+            }
 
             Process xdelta = new Process();
             if (runningInWindows && run64bitxdelta) xdelta.StartInfo.FileName = "xdelta3.x86_64.exe";
@@ -461,6 +481,15 @@ namespace YAXBPC
 
             xdelta.WaitForExit();
             if (debugMode) MessageBox.Show(sb.ToString());
+
+            if (plsDelSourceFile)
+            {
+                File.Delete(sourceFile);
+            }
+            if (plsDelTargetFile)
+            {
+                File.Delete(targetFile);
+            }
 
             if (xdelta.ExitCode != 0) // I, right here, abuse exception. Feel free to sue me.
             {
