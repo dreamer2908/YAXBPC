@@ -729,8 +729,30 @@ namespace YAXBPC
             }
         }
 
-        private string applyOnePatch(string sourceFile, string vcdiffFile, string outputFile)
+        private string applyOnePatch(string _sourceFile, string vcdiffFile, string _outputFile)
         {
+            string sourceFile = _sourceFile;
+            string outputFile = _outputFile;
+            bool plsRmTmpSourceFile = false;
+            bool plsMvTmpOutputFile = false;
+
+            if (runningInWindows)
+            {
+                if (sourceFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                {
+                    string tmpFname = Path.GetRandomFileName();
+                    File.Copy(sourceFile, tmpFname, true);
+                    sourceFile = tmpFname; // ascii-only and no path, so safe. Most likely will end up in YAXBPC program dir.
+                    plsRmTmpSourceFile = true;
+                }
+                if (outputFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                {
+                    string tmpFname = Path.GetRandomFileName();
+                    outputFile = tmpFname;
+                    plsMvTmpOutputFile = true;
+                }
+            }
+
             Process xdelta = new Process();
             if (runningInWindows && run64bitxdelta) xdelta.StartInfo.FileName = "xdelta3.x86_64.exe"; 
             else xdelta.StartInfo.FileName = "xdelta3"; // Works with xdelta3.exe and xdelta3 package, doesn't work with ./xdelta3
@@ -783,6 +805,15 @@ namespace YAXBPC
 
             xdelta.WaitForExit();
             if (debugMode) MessageBox.Show(sb.ToString());
+
+            if (plsRmTmpSourceFile)
+            {
+                File.Delete(sourceFile);
+            }
+            if (plsMvTmpOutputFile)
+            {
+                File.Move(outputFile, _outputFile);
+            }
 
             return (xdelta.ExitCode == 0)? "All OK." : "Error: " + sb.ToString();
         }
