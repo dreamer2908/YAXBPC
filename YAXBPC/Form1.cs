@@ -417,8 +417,8 @@ namespace YAXBPC
             string targetFileName = Path.GetFileName(_targetFile);
             string outputDir = _outDir;
             string outputVcdiff = Path.Combine(outputDir, "changes.vcdiff");
-            bool plsDelSourceFile = false;
-            bool plsDelTargetFile = false;
+            bool plsRmTmpSourceFile = false;
+            bool plsRmTmpTargetFile = false;
 
             if (runningInWindows)
             {
@@ -428,7 +428,7 @@ namespace YAXBPC
                     File.Copy(sourceFile, tmpFname, true);
                     sourceFile = tmpFname;
                     sourceFileName = sourceFileName.Replace("＂", ""); // xdelta3 in Windows also has problems with fixed-width double quote, even if it's not in filename. Seems to be a buggy parser
-                    plsDelSourceFile = true;
+                    plsRmTmpSourceFile = true;
                 }
                 if (targetFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
                 {
@@ -436,7 +436,7 @@ namespace YAXBPC
                     File.Copy(targetFile, tmpFname, true);
                     targetFile = tmpFname;
                     targetFileName = targetFileName.Replace("＂", "");
-                    plsDelTargetFile = true;
+                    plsRmTmpTargetFile = true;
                 }
             }
 
@@ -486,11 +486,11 @@ namespace YAXBPC
             xdelta.WaitForExit();
             if (debugMode) MessageBox.Show(sb.ToString());
 
-            if (plsDelSourceFile)
+            if (plsRmTmpSourceFile)
             {
                 File.Delete(sourceFile);
             }
-            if (plsDelTargetFile)
+            if (plsRmTmpTargetFile)
             {
                 File.Delete(targetFile);
             }
