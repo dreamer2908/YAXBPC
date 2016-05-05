@@ -236,7 +236,8 @@
             this.rtbLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.rtbLog.Size = new System.Drawing.Size(419, 163);
             this.rtbLog.TabIndex = 7;
-            this.rtbLog.Text = "";
+            this.rtbLog.Text = "Choose a source file (i.e old, previous version), a target file (i.e new, later v" +
+                "ersion), and a place to output the patch, and then click Create Patch.\n\n";
             // 
             // groupBox3
             // 
@@ -630,7 +631,9 @@
             this.rtbApplyLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.rtbApplyLog.Size = new System.Drawing.Size(416, 163);
             this.rtbApplyLog.TabIndex = 7;
-            this.rtbApplyLog.Text = "";
+            this.rtbApplyLog.Text = "Choose a source file (i.e old, previous version), a delta file (*.delta, *.vcdiff" +
+                ", *.xdelta, *.xdelta3), and a place to output the target file, and then click Ap" +
+                "ply Patch.\n\n";
             // 
             // groupBox9
             // 
@@ -943,7 +946,9 @@
             this.btnSetxdeltaHighMem.Size = new System.Drawing.Size(82, 23);
             this.btnSetxdeltaHighMem.TabIndex = 12;
             this.btnSetxdeltaHighMem.Text = "High memory";
-            this.toolTip1.SetToolTip(this.btnSetxdeltaHighMem, resources.GetString("btnSetxdeltaHighMem.ToolTip"));
+            this.toolTip1.SetToolTip(this.btnSetxdeltaHighMem, "Sets source buffer size to 1GiB.\r\nTo ensure compression efficiency, raise it to a" +
+                    "t least 2x amount of data added/removed.\r\nUse this if there\'re 32 - 512 MiB of c" +
+                    "hanges.");
             this.btnSetxdeltaHighMem.UseVisualStyleBackColor = true;
             this.btnSetxdeltaHighMem.Click += new System.EventHandler(this.btnSetxdeltaHighMem_Click);
             // 
@@ -968,7 +973,7 @@
             this.btnSetxdeltaDefault.Size = new System.Drawing.Size(61, 23);
             this.btnSetxdeltaDefault.TabIndex = 14;
             this.btnSetxdeltaDefault.Text = "Default";
-            this.toolTip1.SetToolTip(this.btnSetxdeltaDefault, "Sets to default settings");
+            this.toolTip1.SetToolTip(this.btnSetxdeltaDefault, "Resets to default settings");
             this.btnSetxdeltaDefault.UseVisualStyleBackColor = true;
             this.btnSetxdeltaDefault.Click += new System.EventHandler(this.btnSetxdeltaDefault_Click);
             // 
