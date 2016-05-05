@@ -413,6 +413,8 @@ namespace YAXBPC
             Boolean useRelativePath = chbOnlyStoreFileNameInVCDIFF.Checked || stringContainsNonASCIIChar(Path.GetFileName(_sourceFile)) || stringContainsNonASCIIChar(Path.GetFileName(_targetFile));
             string sourceFile = _sourceFile;
             string targetFile = _targetFile;
+            string sourceFileName = Path.GetFileName(_sourceFile);
+            string targetFileName = Path.GetFileName(_targetFile);
             string outputDir = _outDir;
             string outputVcdiff = Path.Combine(outputDir, "changes.vcdiff");
             bool plsDelSourceFile = false;
@@ -425,6 +427,7 @@ namespace YAXBPC
                     string tmpFname = Path.GetRandomFileName();
                     File.Copy(sourceFile, tmpFname, true);
                     sourceFile = tmpFname;
+                    sourceFileName = sourceFileName.Replace("＂", ""); // xdelta3 in Windows also has problems with fixed-width double quote, even if it's not in filename. Seems to be a buggy parser
                     plsDelSourceFile = true;
                 }
                 if (targetFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
@@ -432,6 +435,7 @@ namespace YAXBPC
                     string tmpFname = Path.GetRandomFileName();
                     File.Copy(targetFile, tmpFname, true);
                     targetFile = tmpFname;
+                    targetFileName = targetFileName.Replace("＂", "");
                     plsDelTargetFile = true;
                 }
             }
@@ -469,7 +473,7 @@ namespace YAXBPC
             }
             else if (useRelativePath)
             {
-                xdelta.StartInfo.Arguments = "-A=\"" + Path.GetFileName(targetFile) + "//" + Path.GetFileName(sourceFile) + "/\" " + xdelta.StartInfo.Arguments;
+                xdelta.StartInfo.Arguments = "-A=\"" + targetFileName + "//" + sourceFileName + "/\" " + xdelta.StartInfo.Arguments;
             }
 
             if (debugMode) MessageBox.Show(xdelta.StartInfo.Arguments);
