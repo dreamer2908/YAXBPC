@@ -5,8 +5,21 @@ setlocal
 rem Roses are red, violets are blue, sugar is sweet, and so are you.
 rem Enjoy your usual ratio: 5% of lines do the actual work, and the rest are there to make sure they work. (It's like 1%, actually)
 
+set "powershell=%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe"
+if exist %powershell% (
+	rem If PowerShell is installed, execute the sub-script, and exit when it's done. Nothing is set up, so nothing to cleanup
+	%powershell% -noprofile -executionpolicy bypass -file "%~dp0\subscript1.ps1" "%~1"
+	goto :eof
+) else (
+	echo PowerShell not found. Executing the legacy code path...
+)
+
 for /f "tokens=2 delims=:." %%x in ('chcp') do set cp=%%x
 chcp 65001>nul
+set WORKINGDIR=%CD%
+chdir /d "%~dp0"
+(call )
+
 set sourcefile=&sourcefile&
 set targetfile=&targetfile&
 set app=xdelta3.exe
@@ -16,9 +29,6 @@ set targetfiletmp=targetfile.tmp
 set movesourcefile=0
 set movetargetfile=0
 set olddir=old
-set WORKINGDIR=%CD%
-chdir /d "%~dp0"
-(call )
 
 call :find_xdelta3 && call :find_inputs "%~1" && call :run_patch
 call :gtfo

@@ -559,15 +559,20 @@ namespace YAXBPC
 
             // Unified both scripts. Now only apply_patch_windows.bat
             string winScript = File.ReadAllText(Path.Combine(programDir, "apply_patch_windows.bat"));
+            // The brand-new PowerShell subscript
+            string psScript = File.ReadAllText(Path.Combine(programDir, "subscript1.ps1"));
 
             winScript = winScript.Replace("&sourcefile&", escapeStringForBatch(sourceFile)).Replace("&targetfile&", escapeStringForBatch(targetFile));
+            psScript = psScript.Replace("&sourcefile&", sourceFile.Replace("'", "''")).Replace("&targetfile&", targetFile.Replace("'", "''")); // Any single quote in single-quoted PowerShell string must be doubled (replace ' with '')
             if (stringContainsNonASCIIChar(Path.GetFileName(sourceFile)))
             {
                 winScript = winScript.Replace("set movesourcefile=0", "set movesourcefile=1");
+                psScript = psScript.Replace("movesourcefile = 0", "movesourcefile = 1"); // even though PS has native unicode support, calling xdelta3 with unicode paramenters still ends up in failure
             }
             if (stringContainsNonASCIIChar(Path.GetFileName(targetFile)))
             {
                 winScript = winScript.Replace("set movetargetfile=0", "set movetargetfile=1");
+                psScript = psScript.Replace("movetargetfile = 0", "movetargetfile = 1");
             }
             if (!(stringContainsNonASCIIChar(Path.GetFileName(sourceFile) + Path.GetFileName(targetFile))))
             {
@@ -579,12 +584,14 @@ namespace YAXBPC
             string winPath = Path.Combine(outputDir, "apply_patch_windows.bat");
             string linuxPath = Path.Combine(outputDir, "apply_patch_linux.sh");
             string readMePath = Path.Combine(outputDir, "how_to_apply_this_patch.txt");
+            string psPath = Path.Combine(outputDir, "subscript1.ps1");
 
             // write outputs
             File.WriteAllText(winPath, winScript);
             File.WriteAllText(linuxPath, linuxScript);
             File.WriteAllText(macPath, macScript);
             File.WriteAllText(readMePath, readMe);
+            File.WriteAllText(psPath, psScript, Encoding.UTF8); // encoding utf-8 with BOM
 
             // "Apply all" scripts
             if (addNewPatchToApplyAllScripts)
