@@ -16,8 +16,8 @@ In short:
 You might want to check for some system requirements:
 - A *working* computer.
 - A *working* and *modern* PC operating system (Windows, Linux, Unix, Mac OSX).
-- These common OSes are officially supported and fully tested: Windows 7, Windows 10, Linux Mint 17.3, and whatever Mac OSX in 2014. WinXP and earlier is officially unsupported. The rest are unknown, and I have no way nor intention to test them.
+- These common OSes are officially supported and fully tested: Windows 7, Windows 10, Linux Mint 17.3, and whatever Mac OSX in 2014.
 - For Mac OSX: A guy has provided me with a Mac binary, but seriously, you should install xdelta3 package.
-- For Linux/Unix: Either xdelta3 package installed, WinE package installed, or included Linux binaries' permission set to executable. Your shell should be Bash or dash; sh still works as long as you don't "source" the script.
-- For Windows: Nothing prevents the script from executing the binary file xdelta3.exe (stupid antivirus for example).
+- For Linux/Unix: Either xdelta3 package installed, WinE package installed, or included Linux binaries' permission set to executable. Your shell should be bash or dash; sh still works as long as you don't "source" the script.
+- For Windows: Nothing prevents the script from executing the binary file xdelta3.exe (stupid antivirus for example). This patch makes heavy use of PowerShell when possible. It is installed by default in Windows 7 and later. If you're on Windows XP or Vista, please install it manually (see https://support.microsoft.com/en-us/kb/968929 ).
 - Make sure that no program is accessing the original file (&sourcefile&) and any files in this patch. This is not a strict requirement, but patching might fail otherwise.

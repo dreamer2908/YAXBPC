@@ -590,7 +590,7 @@ namespace YAXBPC
             File.WriteAllText(winPath, winScript);
             File.WriteAllText(linuxPath, linuxScript);
             File.WriteAllText(macPath, macScript);
-            File.WriteAllText(readMePath, readMe);
+            File.WriteAllText(readMePath, readMe, Encoding.UTF8);
             File.WriteAllText(psPath, psScript, Encoding.UTF8); // encoding utf-8 with BOM
 
             // "Apply all" scripts
