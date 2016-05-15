@@ -85,6 +85,7 @@ namespace YAXBPC
         Boolean funnyMode = false;
         Boolean batchProcessingMode = false;
         Boolean addNewPatchToApplyAllScripts = false;
+        Boolean alwaysCopySourceFiles = false;
 
         // shared variables for batch processing
         Int32 jobsCount = 0;
@@ -422,7 +423,7 @@ namespace YAXBPC
 
             if (runningInWindows)
             {
-                if (sourceFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                if (alwaysCopySourceFiles || sourceFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
                 {
                     string tmpFname = Path.GetRandomFileName();
                     File.Copy(sourceFile, tmpFname, true);
@@ -430,7 +431,7 @@ namespace YAXBPC
                     sourceFileName = sourceFileName.Replace("＂", ""); // xdelta3 in Windows also has problems with fixed-width double quote, even if it's not in filename. Seems to be a buggy parser
                     plsRmTmpSourceFile = true;
                 }
-                if (targetFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                if (alwaysCopySourceFiles || targetFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
                 {
                     string tmpFname = Path.GetRandomFileName();
                     File.Copy(targetFile, tmpFname, true);
@@ -749,14 +750,14 @@ namespace YAXBPC
 
             if (runningInWindows)
             {
-                if (sourceFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                if (alwaysCopySourceFiles || sourceFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
                 {
                     string tmpFname = Path.GetRandomFileName();
                     File.Copy(sourceFile, tmpFname, true);
                     sourceFile = tmpFname; // ascii-only and no path, so safe. Most likely will end up in YAXBPC program dir.
                     plsRmTmpSourceFile = true;
                 }
-                if (outputFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
+                if (alwaysCopySourceFiles || outputFile.IndexOfAny("＜＞：＂／＼｜？＊".ToCharArray()) != -1)
                 {
                     string tmpFname = Path.GetRandomFileName();
                     outputFile = tmpFname;
@@ -1194,6 +1195,11 @@ namespace YAXBPC
             addNewPatchToApplyAllScripts = chbAddNewPatchToApplyAllScripts.Checked;
         }
 
+        private void chbAlwaysCopySourceFiles_CheckedChanged(object sender, EventArgs e)
+        {
+            alwaysCopySourceFiles = chbAlwaysCopySourceFiles.Checked;
+        }
+
         #endregion
 
         #region Apply tab
@@ -1287,6 +1293,7 @@ namespace YAXBPC
             txtDefaultOutDir.Text = settings.Read("OutDir.txtDefaultOutDir");
             funnyMode = chbFunnyMode.Checked = (settings.Read("Setting.chbFunnyMode") == "true") ? true : false;
             addNewPatchToApplyAllScripts = chbAddNewPatchToApplyAllScripts.Checked = (settings.Read("Setting.chbAddNewPatchToApplyAllScripts") == "true") ? true : false;
+            alwaysCopySourceFiles = chbAlwaysCopySourceFiles.Checked = (settings.Read("Setting.chbAlwaysCopySourceFiles") == "true") ? true : false;
             chbOnlyStoreFileNameInVCDIFF.Checked = (settings.Read("Setting.chbOnlyStoreFileNameInVCDIFF") == "true") ? true : false; // doesn't work if it's at 2 lines upper. magically works when I moved the line to here. wtf?
         }
 
@@ -1307,6 +1314,7 @@ namespace YAXBPC
             settings.Write("Setting.chbOnlyStoreFileNameInVCDIFF", (chbOnlyStoreFileNameInVCDIFF.Checked) ? "true" : "false");
             settings.Write("Setting.chbFunnyMode", (chbFunnyMode.Checked) ? "true" : "false");
             settings.Write("Setting.chbAddNewPatchToApplyAllScripts", (chbAddNewPatchToApplyAllScripts.Checked) ? "true" : "false"); 
+            settings.Write("Setting.chbAlwaysCopySourceFiles", (chbAlwaysCopySourceFiles.Checked) ? "true" : "false");
             settings.Close();
         }
 

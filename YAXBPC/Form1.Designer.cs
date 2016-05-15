@@ -118,6 +118,7 @@
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
+            this.chbAlwaysCopySourceFiles = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabpgCreatePatch.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -769,6 +770,7 @@
             // 
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.chbAlwaysCopySourceFiles);
             this.groupBox12.Controls.Add(this.chbAddNewPatchToApplyAllScripts);
             this.groupBox12.Controls.Add(this.chbFunnyMode);
             this.groupBox12.Location = new System.Drawing.Point(3, 321);
@@ -1166,6 +1168,17 @@
             this.openFileDialog3.Filter = "Delta files (*.vcdiff; *.delta; *.xdelta3; *.xdelta)|*.vcdiff;*.delta;*.xdelta3;*" +
                 ".xdelta|All files (*.*)|*.*";
             // 
+            // chbAlwaysCopySourceFiles
+            // 
+            this.chbAlwaysCopySourceFiles.AutoSize = true;
+            this.chbAlwaysCopySourceFiles.Location = new System.Drawing.Point(6, 43);
+            this.chbAlwaysCopySourceFiles.Name = "chbAlwaysCopySourceFiles";
+            this.chbAlwaysCopySourceFiles.Size = new System.Drawing.Size(383, 17);
+            this.chbAlwaysCopySourceFiles.TabIndex = 14;
+            this.chbAlwaysCopySourceFiles.Text = "Always make temporary copies of source files when creating/applying patch";
+            this.chbAlwaysCopySourceFiles.UseVisualStyleBackColor = true;
+            this.chbAlwaysCopySourceFiles.CheckedChanged += new System.EventHandler(this.chbAlwaysCopySourceFiles_CheckedChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1304,6 +1317,7 @@
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.CheckBox chbAddNewPatchToApplyAllScripts;
         private System.Windows.Forms.OpenFileDialog openFileDialog3;
+        private System.Windows.Forms.CheckBox chbAlwaysCopySourceFiles;
     }
 }
 
