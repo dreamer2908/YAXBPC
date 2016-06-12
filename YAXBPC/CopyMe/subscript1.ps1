@@ -85,10 +85,12 @@ function run_patch {
     }
 
     if (Test-Path -LiteralPath $global:targetfile) {
-        if ( -Not (Test-Path -LiteralPath $global:olddir)) {
-            New-Item -Path $global:olddir -ItemType Directory | out-null
+        if ( -Not (Test-Path -LiteralPath "do_not_move_old_file.txt")) {
+            if ( -Not (Test-Path -LiteralPath $global:olddir)) {
+                New-Item -Path $global:olddir -ItemType Directory | out-null
+            }
+            Move-Item -literalPath $global:sourcefile $global:olddir -force
         }
-        Move-Item -literalPath $global:sourcefile $global:olddir -force
         Write-Host "Done."
         return $true
     } else {

@@ -83,7 +83,7 @@ run_patch () {
 }
 
 move_old_file () {
-	if [ -f "$targetfile" ]; then
+	if [ -f "$targetfile" ] && [ ! -f "do_not_move_old_file.txt" ]; then
 		mkdir -p "$olddir" >/dev/null
 		if mv "$sourcefile" "$olddir/"; then
 			echo "Moved the old file to directory \"$olddir\"."
