@@ -21,7 +21,13 @@ olddir="old"
 
 find_xdelta3() {
 	chmod +x ./xdelta3_mac 2>/dev/null
-	if [ "x`uname -s`" = "xDarwin" ] && [ -x ./xdelta3_mac ] && file ./xdelta3_mac | grep -q "Mach-O"; then
+	case $(uname -m) in
+		i*86) arch=x86;;
+		Pentium*|AMD?Athlon*) arch=x86;;
+		amd64|x86_64) arch=x86_64;;
+		*) arch=other;;
+	esac
+	if [ "x`uname -s`" = "xDarwin" ] && [ "$arch" = "x86_64" ] && [ -x ./xdelta3_mac ] && file ./xdelta3_mac | grep -q "Mach-O"; then
 		app="./xdelta3_mac"
 	elif hash xdelta3 2>/dev/null; then
 		app="xdelta3"
