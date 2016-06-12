@@ -19,9 +19,15 @@ olddir="old"
 find_xdelta3() {
 	chmod +x ./xdelta3 2>/dev/null
 	chmod +x ./xdelta3.x86_64 2>/dev/null
-	if [ -x ./xdelta3.x86_64 ] && [ `getconf LONG_BIT` = "64" ] && file ./xdelta3.x86_64 | grep -q "GNU/Linux"; then
+	case $(uname -m) in
+		i*86) arch=x86;;
+		Pentium*|AMD?Athlon*) arch=x86;;
+		amd64|x86_64) arch=x86_64;;
+		*) arch=other;;
+	esac
+	if [ "$(uname)" = "Linux" ] && [ "$arch" = "x86_64" ] && [ -x ./xdelta3.x86_64 ] && file ./xdelta3.x86_64 | grep -q "GNU/Linux"; then
 		app="./xdelta3.x86_64"
-	elif [ -x ./xdelta3 ] && file ./xdelta3 | grep -q "GNU/Linux"; then
+	elif [ "$(uname)" = "Linux" ] && [ "$arch" = "x86" ] && [ -x ./xdelta3 ] && file ./xdelta3 | grep -q "GNU/Linux"; then
 		app="./xdelta3"
 	elif hash xdelta3 2>/dev/null; then
 		app="xdelta3"
