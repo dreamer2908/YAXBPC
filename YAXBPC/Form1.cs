@@ -1316,6 +1316,13 @@ namespace YAXBPC
             alwaysCopySourceFiles = chbAlwaysCopySourceFiles.Checked = (settings.Read("Setting.chbAlwaysCopySourceFiles") == "true") ? true : false;
             chbOnlyStoreFileNameInVCDIFF.Checked = (settings.Read("Setting.chbOnlyStoreFileNameInVCDIFF") == "true") ? true : false; // doesn't work if it's at 2 lines upper. magically works when I moved the line to here. wtf?
             chbSkipAlternativeScripts.Checked = (settings.Read("Setting.chbSkipAlternativeScripts") == "true");
+            chbSaveFormsInCreatePatchTab.Checked = (settings.Read("Setting.chbSaveFormsInCreatePatchTab") == "true");
+            if (chbSaveFormsInCreatePatchTab.Checked)
+            {
+                txtSourceFile.Text = settings.Read("CreatePatch.txtSourceFile");
+                txtTargetFile.Text = settings.Read("CreatePatch.txtTargetFile");
+                txtOutputDir.Text = settings.Read("CreatePatch.txtOutputDir");
+            }
         }
 
         private void saveSettings()
@@ -1337,6 +1344,19 @@ namespace YAXBPC
             settings.Write("Setting.chbAddNewPatchToApplyAllScripts", (chbAddNewPatchToApplyAllScripts.Checked) ? "true" : "false"); 
             settings.Write("Setting.chbAlwaysCopySourceFiles", (chbAlwaysCopySourceFiles.Checked) ? "true" : "false");
             settings.Write("Setting.chbSkipAlternativeScripts", (chbSkipAlternativeScripts.Checked) ? "true" : "false");
+            settings.Write("Setting.chbSaveFormsInCreatePatchTab", (chbSaveFormsInCreatePatchTab.Checked) ? "true" : "false");
+            if (chbSaveFormsInCreatePatchTab.Checked)
+            {
+                settings.Write("CreatePatch.txtSourceFile", txtSourceFile.Text);
+                settings.Write("CreatePatch.txtTargetFile", txtTargetFile.Text);
+                settings.Write("CreatePatch.txtOutputDir", txtOutputDir.Text);
+            }
+            else
+            {
+                settings.Write("CreatePatch.txtSourceFile", "");
+                settings.Write("CreatePatch.txtTargetFile", "");
+                settings.Write("CreatePatch.txtOutputDir", "");
+            }
             settings.Close();
         }
 

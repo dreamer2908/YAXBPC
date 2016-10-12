@@ -82,6 +82,7 @@
             this.txtApplySource = new System.Windows.Forms.TextBox();
             this.tabpgSettings = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.chbSkipAlternativeScripts = new System.Windows.Forms.CheckBox();
             this.chbAlwaysCopySourceFiles = new System.Windows.Forms.CheckBox();
             this.chbAddNewPatchToApplyAllScripts = new System.Windows.Forms.CheckBox();
             this.chbFunnyMode = new System.Windows.Forms.CheckBox();
@@ -119,7 +120,7 @@
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
-            this.chbSkipAlternativeScripts = new System.Windows.Forms.CheckBox();
+            this.chbSaveFormsInCreatePatchTab = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabpgCreatePatch.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -772,6 +773,7 @@
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.chbSaveFormsInCreatePatchTab);
             this.groupBox12.Controls.Add(this.chbSkipAlternativeScripts);
             this.groupBox12.Controls.Add(this.chbAlwaysCopySourceFiles);
             this.groupBox12.Controls.Add(this.chbAddNewPatchToApplyAllScripts);
@@ -782,6 +784,17 @@
             this.groupBox12.TabIndex = 3;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Misc";
+            // 
+            // chbSkipAlternativeScripts
+            // 
+            this.chbSkipAlternativeScripts.AutoSize = true;
+            this.chbSkipAlternativeScripts.Location = new System.Drawing.Point(6, 63);
+            this.chbSkipAlternativeScripts.Name = "chbSkipAlternativeScripts";
+            this.chbSkipAlternativeScripts.Size = new System.Drawing.Size(172, 17);
+            this.chbSkipAlternativeScripts.TabIndex = 15;
+            this.chbSkipAlternativeScripts.Text = "Skip copying alternative scripts";
+            this.chbSkipAlternativeScripts.UseVisualStyleBackColor = true;
+            this.chbSkipAlternativeScripts.CheckedChanged += new System.EventHandler(this.chbSkipAlternativeScripts_CheckedChanged);
             // 
             // chbAlwaysCopySourceFiles
             // 
@@ -1182,16 +1195,15 @@
             this.openFileDialog3.Filter = "Delta files (*.vcdiff; *.delta; *.xdelta3; *.xdelta)|*.vcdiff;*.delta;*.xdelta3;*" +
                 ".xdelta|All files (*.*)|*.*";
             // 
-            // chbSkipAlternativeScripts
+            // chbSaveFormsInCreatePatchTab
             // 
-            this.chbSkipAlternativeScripts.AutoSize = true;
-            this.chbSkipAlternativeScripts.Location = new System.Drawing.Point(6, 63);
-            this.chbSkipAlternativeScripts.Name = "chbSkipAlternativeScripts";
-            this.chbSkipAlternativeScripts.Size = new System.Drawing.Size(172, 17);
-            this.chbSkipAlternativeScripts.TabIndex = 15;
-            this.chbSkipAlternativeScripts.Text = "Skip copying alternative scripts";
-            this.chbSkipAlternativeScripts.UseVisualStyleBackColor = true;
-            this.chbSkipAlternativeScripts.CheckedChanged += new System.EventHandler(this.chbSkipAlternativeScripts_CheckedChanged);
+            this.chbSaveFormsInCreatePatchTab.AutoSize = true;
+            this.chbSaveFormsInCreatePatchTab.Location = new System.Drawing.Point(192, 63);
+            this.chbSaveFormsInCreatePatchTab.Name = "chbSaveFormsInCreatePatchTab";
+            this.chbSaveFormsInCreatePatchTab.Size = new System.Drawing.Size(204, 17);
+            this.chbSaveFormsInCreatePatchTab.TabIndex = 16;
+            this.chbSaveFormsInCreatePatchTab.Text = "Save forms in Create Patch tab at exit";
+            this.chbSaveFormsInCreatePatchTab.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
@@ -1333,6 +1345,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog3;
         private System.Windows.Forms.CheckBox chbAlwaysCopySourceFiles;
         private System.Windows.Forms.CheckBox chbSkipAlternativeScripts;
+        private System.Windows.Forms.CheckBox chbSaveFormsInCreatePatchTab;
     }
 }
 
