@@ -435,7 +435,7 @@ namespace YAXBPC
                 if (alwaysCopySourceFiles || stringContainsNon1252Char(sourceFile))
                 {
                     AddText2Log("Making a temporary copy of the source file...\n");
-                    string tmpFname = Path.GetRandomFileName();
+                    string tmpFname = Guid.NewGuid().ToString() + ".tmp";
                     File.Copy(sourceFile, tmpFname, true);
                     sourceFile = tmpFname;
                     sourceFileName = sourceFileName.Replace("＂", ""); // xdelta3 in Windows doesn't support unicode. full-width quote will become normal quote when xdelta3 receives it, so problems will arise. Alter the filename in vcdiff header a bit to work around this. This filename is for decoration purpose so no problems.
@@ -444,7 +444,7 @@ namespace YAXBPC
                 if (alwaysCopySourceFiles || stringContainsNon1252Char(targetFile))
                 {
                     AddText2Log("Making a temporary copy of the target file...\n");
-                    string tmpFname = Path.GetRandomFileName();
+                    string tmpFname = Guid.NewGuid().ToString() + ".tmp";
                     File.Copy(targetFile, tmpFname, true);
                     targetFile = tmpFname;
                     targetFileName = targetFileName.Replace("＂", "");
@@ -763,14 +763,14 @@ namespace YAXBPC
             {
                 if (alwaysCopySourceFiles || stringContainsNon1252Char(sourceFile))
                 {
-                    string tmpFname = Path.GetRandomFileName();
+                    string tmpFname = Guid.NewGuid().ToString() + ".tmp";
                     File.Copy(sourceFile, tmpFname, true);
                     sourceFile = tmpFname; // ascii-only and no path, so safe. Most likely will end up in YAXBPC program dir.
                     plsRmTmpSourceFile = true;
                 }
                 if (alwaysCopySourceFiles || stringContainsNon1252Char(outputFile))
                 {
-                    string tmpFname = Path.GetRandomFileName();
+                    string tmpFname = Guid.NewGuid().ToString() + ".tmp";
                     outputFile = tmpFname;
                     plsMvTmpOutputFile = true;
                 }
