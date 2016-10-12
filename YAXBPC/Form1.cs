@@ -86,6 +86,7 @@ namespace YAXBPC
         Boolean batchProcessingMode = false;
         Boolean addNewPatchToApplyAllScripts = false;
         Boolean alwaysCopySourceFiles = false;
+        Boolean skipAlternativeScripts = false;
 
         // shared variables for batch processing
         Int32 jobsCount = 0;
@@ -552,12 +553,15 @@ namespace YAXBPC
         private void createApplyingScripts(string sourceFile, string targetFile, string outputDir)
         {
             // directly copy these alternative scripts to output dir
-            string[] alternativeScripts = { "apply_patch_windows_alternative.bat", "apply_patch_mac_alternative.command", "apply_patch_linux_alternative.sh" };
-            foreach (string s in alternativeScripts)
+            if (!skipAlternativeScripts)
             {
-                string source = Path.Combine(programDir, s);
-                string target = Path.Combine(outputDir, s);
-                File.Copy(source, target, true);
+                string[] alternativeScripts = { "apply_patch_windows_alternative.bat", "apply_patch_mac_alternative.command", "apply_patch_linux_alternative.sh" };
+                foreach (string s in alternativeScripts)
+                {
+                    string source = Path.Combine(programDir, s);
+                    string target = Path.Combine(outputDir, s);
+                    File.Copy(source, target, true);
+                }
             }
 
             // Linux & Mac scripts seamlessly work with non-ascii filenames.
@@ -1211,6 +1215,11 @@ namespace YAXBPC
             alwaysCopySourceFiles = chbAlwaysCopySourceFiles.Checked;
         }
 
+        private void chbSkipAlternativeScripts_CheckedChanged(object sender, EventArgs e)
+        {
+            skipAlternativeScripts = chbSkipAlternativeScripts.Checked;
+        }
+
         #endregion
 
         #region Apply tab
@@ -1306,6 +1315,7 @@ namespace YAXBPC
             addNewPatchToApplyAllScripts = chbAddNewPatchToApplyAllScripts.Checked = (settings.Read("Setting.chbAddNewPatchToApplyAllScripts") == "true") ? true : false;
             alwaysCopySourceFiles = chbAlwaysCopySourceFiles.Checked = (settings.Read("Setting.chbAlwaysCopySourceFiles") == "true") ? true : false;
             chbOnlyStoreFileNameInVCDIFF.Checked = (settings.Read("Setting.chbOnlyStoreFileNameInVCDIFF") == "true") ? true : false; // doesn't work if it's at 2 lines upper. magically works when I moved the line to here. wtf?
+            chbSkipAlternativeScripts.Checked = (settings.Read("Setting.chbSkipAlternativeScripts") == "true");
         }
 
         private void saveSettings()
@@ -1326,6 +1336,7 @@ namespace YAXBPC
             settings.Write("Setting.chbFunnyMode", (chbFunnyMode.Checked) ? "true" : "false");
             settings.Write("Setting.chbAddNewPatchToApplyAllScripts", (chbAddNewPatchToApplyAllScripts.Checked) ? "true" : "false"); 
             settings.Write("Setting.chbAlwaysCopySourceFiles", (chbAlwaysCopySourceFiles.Checked) ? "true" : "false");
+            settings.Write("Setting.chbSkipAlternativeScripts", (chbSkipAlternativeScripts.Checked) ? "true" : "false");
             settings.Close();
         }
 

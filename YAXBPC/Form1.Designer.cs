@@ -82,6 +82,7 @@
             this.txtApplySource = new System.Windows.Forms.TextBox();
             this.tabpgSettings = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.chbAlwaysCopySourceFiles = new System.Windows.Forms.CheckBox();
             this.chbAddNewPatchToApplyAllScripts = new System.Windows.Forms.CheckBox();
             this.chbFunnyMode = new System.Windows.Forms.CheckBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -118,7 +119,7 @@
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
-            this.chbAlwaysCopySourceFiles = new System.Windows.Forms.CheckBox();
+            this.chbSkipAlternativeScripts = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabpgCreatePatch.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -153,7 +154,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(452, 421);
+            this.tabControl1.Size = new System.Drawing.Size(452, 437);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -169,7 +170,7 @@
             this.tabpgCreatePatch.Location = new System.Drawing.Point(4, 22);
             this.tabpgCreatePatch.Name = "tabpgCreatePatch";
             this.tabpgCreatePatch.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpgCreatePatch.Size = new System.Drawing.Size(444, 395);
+            this.tabpgCreatePatch.Size = new System.Drawing.Size(444, 411);
             this.tabpgCreatePatch.TabIndex = 0;
             this.tabpgCreatePatch.Text = "Create Patch";
             this.tabpgCreatePatch.UseVisualStyleBackColor = true;
@@ -178,7 +179,7 @@
             // 
             this.btnResetForms.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnResetForms.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetForms.Location = new System.Drawing.Point(6, 365);
+            this.btnResetForms.Location = new System.Drawing.Point(6, 381);
             this.btnResetForms.Name = "btnResetForms";
             this.btnResetForms.Size = new System.Drawing.Size(88, 23);
             this.btnResetForms.TabIndex = 8;
@@ -190,7 +191,7 @@
             // 
             this.btnAddEditJob.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddEditJob.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddEditJob.Location = new System.Drawing.Point(350, 365);
+            this.btnAddEditJob.Location = new System.Drawing.Point(350, 381);
             this.btnAddEditJob.Name = "btnAddEditJob";
             this.btnAddEditJob.Size = new System.Drawing.Size(88, 23);
             this.btnAddEditJob.TabIndex = 10;
@@ -203,7 +204,7 @@
             this.btnSwapSnT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSwapSnT.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSwapSnT.Location = new System.Drawing.Point(100, 365);
+            this.btnSwapSnT.Location = new System.Drawing.Point(100, 381);
             this.btnSwapSnT.Name = "btnSwapSnT";
             this.btnSwapSnT.Size = new System.Drawing.Size(244, 23);
             this.btnSwapSnT.TabIndex = 9;
@@ -219,7 +220,7 @@
             this.groupBox4.Controls.Add(this.rtbLog);
             this.groupBox4.Location = new System.Drawing.Point(6, 171);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(432, 188);
+            this.groupBox4.Size = new System.Drawing.Size(432, 204);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Log";
@@ -235,7 +236,7 @@
             this.rtbLog.Name = "rtbLog";
             this.rtbLog.ReadOnly = true;
             this.rtbLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.rtbLog.Size = new System.Drawing.Size(419, 163);
+            this.rtbLog.Size = new System.Drawing.Size(419, 179);
             this.rtbLog.TabIndex = 7;
             this.rtbLog.Text = "Choose a source file (i.e old, previous version), a target file (i.e new, later v" +
                 "ersion), and a place to output the patch, and then click Create Patch.\n\n";
@@ -364,7 +365,7 @@
             this.tabpgBatchProcessing.Location = new System.Drawing.Point(4, 22);
             this.tabpgBatchProcessing.Name = "tabpgBatchProcessing";
             this.tabpgBatchProcessing.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpgBatchProcessing.Size = new System.Drawing.Size(444, 395);
+            this.tabpgBatchProcessing.Size = new System.Drawing.Size(444, 411);
             this.tabpgBatchProcessing.TabIndex = 1;
             this.tabpgBatchProcessing.Text = "Batch Processing";
             this.tabpgBatchProcessing.UseVisualStyleBackColor = true;
@@ -380,7 +381,7 @@
             this.groupBox14.Controls.Add(this.btnEdit);
             this.groupBox14.Location = new System.Drawing.Point(6, 6);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(432, 298);
+            this.groupBox14.Size = new System.Drawing.Size(432, 314);
             this.groupBox14.TabIndex = 14;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Job list";
@@ -423,7 +424,7 @@
             this.listView1.FullRowSelect = true;
             this.listView1.Location = new System.Drawing.Point(6, 45);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(420, 246);
+            this.listView1.Size = new System.Drawing.Size(420, 262);
             this.listView1.SmallImageList = this.imageList1;
             this.listView1.TabIndex = 4;
             this.listView1.UseCompatibleStateImageBehavior = false;
@@ -504,7 +505,7 @@
             this.groupBox13.Controls.Add(this.btnBrowseBatchTargetDir);
             this.groupBox13.Controls.Add(this.txtBatchTargetDir);
             this.groupBox13.Controls.Add(this.label1);
-            this.groupBox13.Location = new System.Drawing.Point(6, 310);
+            this.groupBox13.Location = new System.Drawing.Point(6, 326);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(432, 79);
             this.groupBox13.TabIndex = 13;
@@ -601,7 +602,7 @@
             this.tabpgApplyPatch.Controls.Add(this.groupBox11);
             this.tabpgApplyPatch.Location = new System.Drawing.Point(4, 22);
             this.tabpgApplyPatch.Name = "tabpgApplyPatch";
-            this.tabpgApplyPatch.Size = new System.Drawing.Size(444, 395);
+            this.tabpgApplyPatch.Size = new System.Drawing.Size(444, 411);
             this.tabpgApplyPatch.TabIndex = 3;
             this.tabpgApplyPatch.Text = "Apply Patch";
             this.tabpgApplyPatch.UseVisualStyleBackColor = true;
@@ -614,7 +615,7 @@
             this.groupBox8.Controls.Add(this.rtbApplyLog);
             this.groupBox8.Location = new System.Drawing.Point(6, 171);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(429, 188);
+            this.groupBox8.Size = new System.Drawing.Size(429, 204);
             this.groupBox8.TabIndex = 4;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Log";
@@ -630,7 +631,7 @@
             this.rtbApplyLog.Name = "rtbApplyLog";
             this.rtbApplyLog.ReadOnly = true;
             this.rtbApplyLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.rtbApplyLog.Size = new System.Drawing.Size(416, 163);
+            this.rtbApplyLog.Size = new System.Drawing.Size(416, 179);
             this.rtbApplyLog.TabIndex = 7;
             this.rtbApplyLog.Text = "Choose a source file (i.e old, previous version), a delta file (*.delta, *.vcdiff" +
                 ", *.xdelta, *.xdelta3), and a place to output the target file, and then click Ap" +
@@ -761,24 +762,37 @@
             this.tabpgSettings.Controls.Add(this.groupBox5);
             this.tabpgSettings.Location = new System.Drawing.Point(4, 22);
             this.tabpgSettings.Name = "tabpgSettings";
-            this.tabpgSettings.Size = new System.Drawing.Size(444, 395);
+            this.tabpgSettings.Size = new System.Drawing.Size(444, 411);
             this.tabpgSettings.TabIndex = 2;
             this.tabpgSettings.Text = "Settings";
             this.tabpgSettings.UseVisualStyleBackColor = true;
             // 
             // groupBox12
             // 
-            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.chbSkipAlternativeScripts);
             this.groupBox12.Controls.Add(this.chbAlwaysCopySourceFiles);
             this.groupBox12.Controls.Add(this.chbAddNewPatchToApplyAllScripts);
             this.groupBox12.Controls.Add(this.chbFunnyMode);
             this.groupBox12.Location = new System.Drawing.Point(3, 321);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(430, 71);
+            this.groupBox12.Size = new System.Drawing.Size(430, 87);
             this.groupBox12.TabIndex = 3;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Misc";
+            // 
+            // chbAlwaysCopySourceFiles
+            // 
+            this.chbAlwaysCopySourceFiles.AutoSize = true;
+            this.chbAlwaysCopySourceFiles.Location = new System.Drawing.Point(6, 41);
+            this.chbAlwaysCopySourceFiles.Name = "chbAlwaysCopySourceFiles";
+            this.chbAlwaysCopySourceFiles.Size = new System.Drawing.Size(383, 17);
+            this.chbAlwaysCopySourceFiles.TabIndex = 14;
+            this.chbAlwaysCopySourceFiles.Text = "Always make temporary copies of source files when creating/applying patch";
+            this.chbAlwaysCopySourceFiles.UseVisualStyleBackColor = true;
+            this.chbAlwaysCopySourceFiles.CheckedChanged += new System.EventHandler(this.chbAlwaysCopySourceFiles_CheckedChanged);
             // 
             // chbAddNewPatchToApplyAllScripts
             // 
@@ -1127,7 +1141,7 @@
             // 
             this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExit.Location = new System.Drawing.Point(12, 441);
+            this.btnExit.Location = new System.Drawing.Point(12, 457);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(98, 23);
             this.btnExit.TabIndex = 11;
@@ -1139,7 +1153,7 @@
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStart.Location = new System.Drawing.Point(366, 441);
+            this.btnStart.Location = new System.Drawing.Point(366, 457);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(98, 23);
             this.btnStart.TabIndex = 12;
@@ -1168,27 +1182,27 @@
             this.openFileDialog3.Filter = "Delta files (*.vcdiff; *.delta; *.xdelta3; *.xdelta)|*.vcdiff;*.delta;*.xdelta3;*" +
                 ".xdelta|All files (*.*)|*.*";
             // 
-            // chbAlwaysCopySourceFiles
+            // chbSkipAlternativeScripts
             // 
-            this.chbAlwaysCopySourceFiles.AutoSize = true;
-            this.chbAlwaysCopySourceFiles.Location = new System.Drawing.Point(6, 43);
-            this.chbAlwaysCopySourceFiles.Name = "chbAlwaysCopySourceFiles";
-            this.chbAlwaysCopySourceFiles.Size = new System.Drawing.Size(383, 17);
-            this.chbAlwaysCopySourceFiles.TabIndex = 14;
-            this.chbAlwaysCopySourceFiles.Text = "Always make temporary copies of source files when creating/applying patch";
-            this.chbAlwaysCopySourceFiles.UseVisualStyleBackColor = true;
-            this.chbAlwaysCopySourceFiles.CheckedChanged += new System.EventHandler(this.chbAlwaysCopySourceFiles_CheckedChanged);
+            this.chbSkipAlternativeScripts.AutoSize = true;
+            this.chbSkipAlternativeScripts.Location = new System.Drawing.Point(6, 63);
+            this.chbSkipAlternativeScripts.Name = "chbSkipAlternativeScripts";
+            this.chbSkipAlternativeScripts.Size = new System.Drawing.Size(172, 17);
+            this.chbSkipAlternativeScripts.TabIndex = 15;
+            this.chbSkipAlternativeScripts.Text = "Skip copying alternative scripts";
+            this.chbSkipAlternativeScripts.UseVisualStyleBackColor = true;
+            this.chbSkipAlternativeScripts.CheckedChanged += new System.EventHandler(this.chbSkipAlternativeScripts_CheckedChanged);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(480, 480);
+            this.ClientSize = new System.Drawing.Size(480, 496);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(488, 507);
+            this.MinimumSize = new System.Drawing.Size(488, 530);
             this.Name = "frmMain";
             this.Text = "Yet Another xdelta3-based Patch Creator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
@@ -1318,6 +1332,7 @@
         private System.Windows.Forms.CheckBox chbAddNewPatchToApplyAllScripts;
         private System.Windows.Forms.OpenFileDialog openFileDialog3;
         private System.Windows.Forms.CheckBox chbAlwaysCopySourceFiles;
+        private System.Windows.Forms.CheckBox chbSkipAlternativeScripts;
     }
 }
 
