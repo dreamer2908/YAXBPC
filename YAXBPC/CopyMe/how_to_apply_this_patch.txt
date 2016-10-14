@@ -24,4 +24,4 @@ You might want to check for some system requirements:
 - If you don't want to, or somehow can't use the bundled xdelta3 binaries, feel free to delete them and install xdelta3 on your system. The patch will use your system binaries instead.
 - Make sure that no program is accessing the original file (&sourcefile&) and any files in this patch. This is not a strict requirement, but patching might fail otherwise.
 
-Patch created with YAXBPC v2.3.2
+Patch created with YAXBPC v2.3.3
