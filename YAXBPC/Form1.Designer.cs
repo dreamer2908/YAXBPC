@@ -121,6 +121,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
             this.chbSaveFormsInCreatePatchTab = new System.Windows.Forms.CheckBox();
+            this.btnResetFormsApplyTab = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabpgCreatePatch.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -597,6 +598,7 @@
             // 
             // tabpgApplyPatch
             // 
+            this.tabpgApplyPatch.Controls.Add(this.btnResetFormsApplyTab);
             this.tabpgApplyPatch.Controls.Add(this.groupBox8);
             this.tabpgApplyPatch.Controls.Add(this.groupBox9);
             this.tabpgApplyPatch.Controls.Add(this.groupBox10);
@@ -788,6 +790,8 @@
             // chbSkipAlternativeScripts
             // 
             this.chbSkipAlternativeScripts.AutoSize = true;
+            this.chbSkipAlternativeScripts.Checked = true;
+            this.chbSkipAlternativeScripts.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbSkipAlternativeScripts.Location = new System.Drawing.Point(6, 63);
             this.chbSkipAlternativeScripts.Name = "chbSkipAlternativeScripts";
             this.chbSkipAlternativeScripts.Size = new System.Drawing.Size(172, 17);
@@ -1198,12 +1202,26 @@
             // chbSaveFormsInCreatePatchTab
             // 
             this.chbSaveFormsInCreatePatchTab.AutoSize = true;
+            this.chbSaveFormsInCreatePatchTab.Checked = true;
+            this.chbSaveFormsInCreatePatchTab.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbSaveFormsInCreatePatchTab.Location = new System.Drawing.Point(192, 63);
             this.chbSaveFormsInCreatePatchTab.Name = "chbSaveFormsInCreatePatchTab";
             this.chbSaveFormsInCreatePatchTab.Size = new System.Drawing.Size(204, 17);
             this.chbSaveFormsInCreatePatchTab.TabIndex = 16;
             this.chbSaveFormsInCreatePatchTab.Text = "Save forms in Create Patch tab at exit";
             this.chbSaveFormsInCreatePatchTab.UseVisualStyleBackColor = true;
+            // 
+            // btnResetFormsApplyTab
+            // 
+            this.btnResetFormsApplyTab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnResetFormsApplyTab.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetFormsApplyTab.Location = new System.Drawing.Point(6, 381);
+            this.btnResetFormsApplyTab.Name = "btnResetFormsApplyTab";
+            this.btnResetFormsApplyTab.Size = new System.Drawing.Size(88, 23);
+            this.btnResetFormsApplyTab.TabIndex = 9;
+            this.btnResetFormsApplyTab.Text = "&Reset Forms";
+            this.btnResetFormsApplyTab.UseVisualStyleBackColor = true;
+            this.btnResetFormsApplyTab.Click += new System.EventHandler(this.btnResetFormsApplyTab_Click);
             // 
             // frmMain
             // 
@@ -1346,6 +1364,7 @@
         private System.Windows.Forms.CheckBox chbAlwaysCopySourceFiles;
         private System.Windows.Forms.CheckBox chbSkipAlternativeScripts;
         private System.Windows.Forms.CheckBox chbSaveFormsInCreatePatchTab;
+        private System.Windows.Forms.Button btnResetFormsApplyTab;
     }
 }
 

@@ -14,17 +14,6 @@
    limitations under the License.
  * */
 
-/*
-TODO:
- * Make a parementer parser to replace killAOption and the quick-a-dirty paramenter killing lines in applyOnePatch
- * Work on chbNewAutoName.
-   + Inputs: "[Ecchihiro]_Netoge_no_Yome_wa_Onnanoko_ja_Nai_to_Omotta？_-_01_[720p_Hi10P_AAC][D232A51F].mkv"
-     and "[Ecchihiro]_Netoge_no_Yome_wa_Onnanoko_ja_Nai_to_Omotta？_-_01v2_[720p_Hi10P_AAC][56298581].mkv"
-   + Output: "patch_01_[D232A51F]_to_01v2_[56298581]" or anything informative like that
-   + A "spot the difference" function maybe? Simply ep+ver+CRC maybe?
- * Do something with btnBatchLoadDirs. Remove or make it work?
- * */
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -482,7 +471,7 @@ namespace YAXBPC
             // See main_set_appheader in xdelta3-main.h for how xdelta3 stores filenames
             if (funnyMode)
             {
-                xdelta.StartInfo.Arguments = "-A=\"" + "**STAR**STAR**STAR** Why am I suddenly seeing stars?" + "//" + "The Goddess who Scatters the Stars commands you to either use the provided scripts or type the full command." + "/\" " + xdelta.StartInfo.Arguments;
+                xdelta.StartInfo.Arguments = "-A=\"" + "**STAR**STAR**STAR** Why am I suddenly seeing stars?" + "//" + "???!@#$%^&*() Either use the provided scripts or type the full command. Thx." + "/\" " + xdelta.StartInfo.Arguments;
             }
             else if (useRelativePath)
             {
@@ -1282,24 +1271,47 @@ namespace YAXBPC
             if (saveFileDialog1.ShowDialog() == DialogResult.OK) txtApplyOutput.Text = saveFileDialog1.FileName;
         }
 
+        private void btnResetFormsApplyTab_Click(object sender, EventArgs e)
+        {
+            txtApplyOutput.Text = "";
+            txtApplySource.Text = "";
+            txtApplyVcdiffFile.Text = "";
+        }
+
         #endregion
 
         #endregion
 
         #region Setting methods
 
+        private Boolean loadSettingsSub_Boolean(string name, Boolean defaultValue)
+        {
+            string text = settings.Read(name);
+            return (text != null) ? text == "true" : defaultValue;
+        }
+
+        private String loadSettingsSub_String(string name, String defaultValue)
+        {
+            string text = settings.Read(name);
+            return (text != null) ? text : defaultValue;
+        }
+
         private void loadSettings()
         {
-            customParamenter = txtCustomXdeltaParams.Text = settings.Read("Setting.CustomParamenter");
-            useCustomParamenter = chbUseCustomXdeltaParams.Checked = (settings.Read("Setting.UseCustomParamenter") == "true") ? true : false;
-            txtCustomXdeltaParamsForApplying.Text = settings.Read("Setting.CustomApplyingParamenter");
-            chbUseCustomXdeltaParamsForApplying.Checked = (settings.Read("Setting.UseCustomApplyingParamenter") == "true") ? true : false;
-            tryDetectingEpisodeNumber = chbDetEpNum.Checked = (settings.Read("Setting.DetectEpNum") == "true") ? true : false;
-            txtAddTextWhenSwap.Text = settings.Read("Setting.AddThisTextWhenSwap");
-            chbAddTextWhenSwap.Checked = (settings.Read("Setting.AddTextWhenSwap") == "true") ? true : false;
-            chbNewAutoName.Checked = (settings.Read("Setting.chbNewAutoName") == "true") ? true : false;
-            run64bitxdelta = chbRun64bitxdelta3.Checked = (settings.Read("Setting.chbRun64bitxdelta3") == "true") ? true : false;
-            dist64bitxdelta = chbDist64bitxdelta3.Checked = (settings.Read("Setting.chbDist64bitxdelta3") == "true") ? true : false;
+            customParamenter = txtCustomXdeltaParams.Text = loadSettingsSub_String("Setting.CustomParamenter", txtCustomXdeltaParams.Text);
+            useCustomParamenter = chbUseCustomXdeltaParams.Checked = loadSettingsSub_Boolean("Setting.UseCustomParamenter", chbUseCustomXdeltaParams.Checked);
+
+            txtCustomXdeltaParamsForApplying.Text = loadSettingsSub_String("Setting.CustomApplyingParamenter", txtCustomXdeltaParamsForApplying.Text);
+            chbUseCustomXdeltaParamsForApplying.Checked = loadSettingsSub_Boolean("Setting.UseCustomApplyingParamenter", chbUseCustomXdeltaParamsForApplying.Checked);
+
+            tryDetectingEpisodeNumber = chbDetEpNum.Checked = loadSettingsSub_Boolean("Setting.DetectEpNum", chbDetEpNum.Checked);
+            txtAddTextWhenSwap.Text = loadSettingsSub_String("Setting.AddThisTextWhenSwap", txtAddTextWhenSwap.Text);
+            chbAddTextWhenSwap.Checked = loadSettingsSub_Boolean("Setting.AddTextWhenSwap", chbAddTextWhenSwap.Checked);
+            chbNewAutoName.Checked = loadSettingsSub_Boolean("Setting.chbNewAutoName", chbNewAutoName.Checked);
+
+            run64bitxdelta = chbRun64bitxdelta3.Checked = loadSettingsSub_Boolean("Setting.chbRun64bitxdelta3", chbRun64bitxdelta3.Checked);
+            dist64bitxdelta = chbDist64bitxdelta3.Checked = loadSettingsSub_Boolean("Setting.chbDist64bitxdelta3", chbDist64bitxdelta3.Checked);
+
             string text = settings.Read("OutDir.Place2Go");
             int number = 0;
             if (int.TryParse(text, out number)) this.outputPlace = number;
@@ -1310,13 +1322,15 @@ namespace YAXBPC
                 case 2: rdbThisFol.Checked = true; break;
                 default: rdbSourceDir.Checked = true; break;
             }
-            txtDefaultOutDir.Text = settings.Read("OutDir.txtDefaultOutDir");
-            funnyMode = chbFunnyMode.Checked = (settings.Read("Setting.chbFunnyMode") == "true") ? true : false;
-            addNewPatchToApplyAllScripts = chbAddNewPatchToApplyAllScripts.Checked = (settings.Read("Setting.chbAddNewPatchToApplyAllScripts") == "true") ? true : false;
-            alwaysCopySourceFiles = chbAlwaysCopySourceFiles.Checked = (settings.Read("Setting.chbAlwaysCopySourceFiles") == "true") ? true : false;
-            chbOnlyStoreFileNameInVCDIFF.Checked = (settings.Read("Setting.chbOnlyStoreFileNameInVCDIFF") == "true") ? true : false; // doesn't work if it's at 2 lines upper. magically works when I moved the line to here. wtf?
-            chbSkipAlternativeScripts.Checked = (settings.Read("Setting.chbSkipAlternativeScripts") == "true");
-            chbSaveFormsInCreatePatchTab.Checked = (settings.Read("Setting.chbSaveFormsInCreatePatchTab") == "true");
+            txtDefaultOutDir.Text = loadSettingsSub_String("OutDir.txtDefaultOutDir", txtDefaultOutDir.Text);
+
+            funnyMode = chbFunnyMode.Checked = loadSettingsSub_Boolean("Setting.chbFunnyMode", chbFunnyMode.Checked);
+
+            addNewPatchToApplyAllScripts = chbAddNewPatchToApplyAllScripts.Checked = loadSettingsSub_Boolean("Setting.chbAddNewPatchToApplyAllScripts", chbAddNewPatchToApplyAllScripts.Checked);
+            alwaysCopySourceFiles = chbAlwaysCopySourceFiles.Checked = loadSettingsSub_Boolean("Setting.chbAlwaysCopySourceFiles", chbAlwaysCopySourceFiles.Checked);
+            chbOnlyStoreFileNameInVCDIFF.Checked = loadSettingsSub_Boolean("Setting.chbOnlyStoreFileNameInVCDIFF", chbOnlyStoreFileNameInVCDIFF.Checked);
+            skipAlternativeScripts = chbSkipAlternativeScripts.Checked = loadSettingsSub_Boolean("Setting.chbSkipAlternativeScripts", chbSkipAlternativeScripts.Checked);
+            chbSaveFormsInCreatePatchTab.Checked = loadSettingsSub_Boolean("Setting.chbSaveFormsInCreatePatchTab", chbSaveFormsInCreatePatchTab.Checked);
             if (chbSaveFormsInCreatePatchTab.Checked)
             {
                 txtSourceFile.Text = settings.Read("CreatePatch.txtSourceFile");
